@@ -1,4 +1,3 @@
-import { logger } from '@lark-apaas/client-toolkit-lite';
 /**
  * sanitize-standalone.js
  *
@@ -19,8 +18,8 @@ import { logger } from '@lark-apaas/client-toolkit-lite';
  * 通过 node public/sanitize-standalone.js 调用。
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // —— 配置 ——
 const DIST_DIR = process.argv[2] || 'dist/gh-pages';
@@ -38,16 +37,40 @@ const PLATFORM_HOST_PATTERNS = [
   'p3-lark.byteimg.com',
 ];
 
+// 平台注入的内联脚本特征关键词（不含 {{}}、也不含域名，但同样需要移除）
+const PLATFORM_INLINE_MARKERS = [
+  'KSlardarWeb',
+  'slardar',
+  '__slardarErrBuf',
+  'collectEvent',
+  'LogAnalyticsObject',
+  'needsPolyfill',
+  'polyfills.js',
+  'window.appId',
+  'window.userId',
+  'window.tenantId',
+  'window.csrfToken',
+  'window.ENVIRONMENT',
+  'window._appInfo',
+  'appInfo',
+];
+
 function containsPlatformHost(str) {
   return PLATFORM_HOST_PATTERNS.some(function (h) {
     return str.indexOf(h) !== -1;
   });
 }
 
+function containsPlatformMarker(str) {
+  return PLATFORM_INLINE_MARKERS.some(function (m) {
+    return str.indexOf(m) !== -1;
+  });
+}
+
 // —— 主流程 ——
 const indexPath = path.resolve(DIST_DIR, 'index.html');
 if (!fs.existsSync(indexPath)) {
-  logger.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
+  console.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
   process.exit(1);
 }
 
@@ -64,7 +87,8 @@ const SCRIPT_INLINE_RE = /<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/gi;
 html = html.replace(SCRIPT_INLINE_RE, function (match, content) {
   const hasTemplate = content.indexOf('{{') !== -1 || content.indexOf('}}') !== -1;
   const hasPlatformHost = containsPlatformHost(content);
-  if (hasTemplate || hasPlatformHost) {
+  const hasPlatformMarker = containsPlatformMarker(content);
+  if (hasTemplate || hasPlatformHost || hasPlatformMarker) {
     stats.inlineScriptsRemoved++;
     return '';
   }
@@ -130,9 +154,9 @@ html = html.replace(/\n\s*\n\s*\n/g, '\n\n');
 fs.writeFileSync(indexPath, html, 'utf-8');
 
 // —— 输出结果 ——
-logger.info('[sanitize] ✅ index.html 清理完成');
-logger.info('  移除内联 script:   ' + stats.inlineScriptsRemoved + ' 个');
-logger.info('  移除外链 script:   ' + stats.remoteScriptsRemoved + ' 个');
-logger.info('  替换模板占位符:     ' + stats.placeholdersReplaced + ' 处');
-logger.info('  注入 basename 脚本: ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
-logger.info('  输出文件:           ' + indexPath);
+console.log('[sanitize] ✅ index.html 清理完成');
+console.log('  移除内联 script:   ' + stats.inlineScriptsRemoved + ' 个');
+console.log('  移除外链 script:   ' + stats.remoteScriptsRemoved + ' 个');
+console.log('  替换模板占位符:     ' + stats.placeholdersReplaced + ' 处');
+console.log('  注入 basename 脚本: ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
+console.log('  输出文件:           ' + indexPath);
