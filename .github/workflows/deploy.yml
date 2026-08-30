@@ -35,6 +35,10 @@ jobs:
         # 构建产物输出到 dist/gh-pages
         run: npx vite build --base './' --outDir dist/gh-pages
 
+      - name: Sanitize HTML for standalone hosting
+        # 清理平台注入的脚本与模板占位符，注入自适应 basename
+        run: node public/sanitize-standalone.js
+
       - name: Add .nojekyll
         run: touch dist/gh-pages/.nojekyll
 
