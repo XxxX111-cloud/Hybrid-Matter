@@ -1,0 +1,241 @@
+.bubble-menu {
+  left: 0;
+  right: 0;
+  top: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 2em;
+  pointer-events: none;
+  z-index: 100;
+}
+.bubble-menu.fixed { position: fixed; }
+.bubble-menu.absolute { position: absolute; }
+
+.bubble-menu .bubble {
+  --bubble-size: 48px;
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.bubble-menu .toggle-bubble {
+  position: relative;
+  z-index: 9999;
+}
+
+.bubble-menu .logo-bubble,
+.bubble-menu .toggle-bubble {
+  will-change: transform;
+}
+
+.bubble-menu .logo-bubble {
+  width: auto;
+  min-height: var(--bubble-size);
+  height: var(--bubble-size);
+  padding: 0 16px;
+  border-radius: calc(var(--bubble-size) / 2);
+  gap: 8px;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.bubble-menu .toggle-bubble {
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+}
+
+.bubble-menu .bubble-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  /* XH logo 是黑底白字，反色后变成白底黑字，适配白色气泡 */
+  filter: invert(1);
+  border-radius: 6px;
+}
+
+.bubble-menu .logo-content {
+  --logo-max-height: 85%;
+  --logo-max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bubble-menu .logo-content > .bubble-logo,
+.bubble-menu .logo-content > img,
+.bubble-menu .logo-content > svg {
+  max-height: var(--logo-max-height);
+  max-width: var(--logo-max-width);
+}
+
+.bubble-menu .logo-content > .bubble-logo-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-height: var(--logo-max-height);
+  max-width: var(--logo-max-width);
+  font-weight: 600;
+  user-select: none;
+}
+
+/* —— Wordmark Logo：几何 H 图标 + Hybrid Matter 文字 —— */
+.bubble-menu .logo-bubble .bubble-menu-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #111111;
+  user-select: none;
+  line-height: 1;
+}
+
+.bubble-menu-wordmark-icon {
+  width: 18px;
+  height: 18px;
+  color: #111111;
+  flex-shrink: 0;
+  /* 微妙的渐变感：用 drop-shadow 增加层次 */
+  filter: drop-shadow(0 0.5px 0 rgba(0, 0, 0, 0.08));
+}
+
+.bubble-menu-wordmark-text {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #111111;
+  /* 文字做极细的梯度叠色，增加高级感 */
+  background: linear-gradient(180deg, #000000 0%, #333333 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+/* 移动端简化：只显示图标 + 首字母，避免过长 */
+@media (max-width: 480px) {
+  .bubble-menu-wordmark-text {
+    display: none;
+  }
+  .bubble-menu .logo-bubble {
+    padding: 0 12px;
+  }
+  .bubble-menu-wordmark-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.bubble-menu .menu-btn {
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.2s ease;
+}
+
+.bubble-menu .menu-btn:hover {
+  transform: scale(1.05);
+}
+
+.bubble-menu .menu-btn:active {
+  transform: scale(0.95);
+}
+
+.bubble-menu .menu-line {
+  width: 26px;
+  height: 2px;
+  background: #111;
+  border-radius: 2px;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+.bubble-menu .menu-line + .menu-line {
+  margin-top: 6px;
+}
+
+.bubble-menu .menu-btn.open .menu-line:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.bubble-menu .menu-btn.open .menu-line:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+@media (min-width: 768px) {
+  .bubble-menu .bubble {
+    --bubble-size: 56px;
+  }
+  .bubble-menu .logo-bubble {
+    padding: 0 18px;
+  }
+  .bubble-menu .logo-content {
+    width: 48px;
+  }
+}
+
+/* OptionWheel overlay - 始终在 DOM，用 CSS 控制显隐 */
+.bubble-menu-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  background: transparent;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.bubble-menu-overlay.fixed {
+  position: fixed;
+}
+
+.bubble-menu-overlay.absolute {
+  position: absolute;
+}
+
+.bubble-menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.bubble-menu-wheel-wrap {
+  width: 50%;
+  height: 100vh;
+  position: relative;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bubble-menu-overlay.open .bubble-menu-wheel-wrap {
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .bubble-menu-wheel-wrap {
+    width: 100%;
+  }
+}

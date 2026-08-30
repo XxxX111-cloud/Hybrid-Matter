@@ -1,0 +1,160 @@
+.carousel-root {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.carousel-stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.carousel-stage:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  position: relative;
+  left: 50%;
+  margin-left: calc(var(--carousel-width, 220px) / -2);
+}
+
+.carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: center center;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.carousel-item.is-active {
+  border-color: #000;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.carousel-item-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.carousel-item-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.carousel-item-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 60%, transparent 100%);
+  color: #fff;
+}
+
+.carousel-item.is-active .carousel-item-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+}
+
+.carousel-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #fff;
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+
+.carousel-item-desc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* 指示器 */
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #d4d4d4;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.carousel-dot:hover {
+  background: #a3a3a3;
+}
+
+.carousel-dot.is-active {
+  width: 20px;
+  background: #000;
+}
+
+/* 暗色模式（深色背景下的反色适配） */
+.carousel-root.is-dark .carousel-item {
+  background: #141414;
+  border-color: #2a2a2a;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-root.is-dark .carousel-item.is-active {
+  border-color: #fff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-root.is-dark .carousel-item-inner {
+  background: #0a0a0a;
+}
+
+.carousel-root.is-dark .carousel-dot {
+  background: #333;
+}
+
+.carousel-root.is-dark .carousel-dot:hover {
+  background: #555;
+}
+
+.carousel-root.is-dark .carousel-dot.is-active {
+  background: #fff;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .carousel-item-title {
+    font-size: 13px;
+  }
+  .carousel-item-desc {
+    font-size: 10px;
+  }
+}

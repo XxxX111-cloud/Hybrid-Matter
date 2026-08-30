@@ -1,0 +1,38 @@
+/* 字体管家细圆体 - 用于中文正文 */
+@font-face {
+  font-family: 'ZiTiGuanJiaXiYuanTi';
+  src: url('https://aka.doubaocdn.com/s/zwKZ2T2dM7') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 全局中文字体：字体管家细圆体前置，西文仍由系统无衬线兜底 */
+:root {
+  --font-sans:
+    'ZiTiGuanJiaXiYuanTi', 'LarkHackSafariFont', 'LarkEmojiFont', 'LarkChineseQuote',
+    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma, 'PingFang SC',
+    'Microsoft Yahei', Arial, 'Hiragino Sans GB', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+}
+
+/* —— 隐藏平台右下角「豆包 AI 生成」水印标识 —— */
+[class*="watermark"],
+[class*="powered-by"],
+[class*="branding"],
+[class*="doubao"],
+[class*="miaoda-badge"],
+[class*="ai-generated"],
+[class*="brand-badge"],
+[aria-label*="豆包"],
+[aria-label*="AI生成"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
