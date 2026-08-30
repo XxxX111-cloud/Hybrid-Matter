@@ -9,7 +9,8 @@
  *   2. 移除外链 src 命中平台域名的 script
  *   3. 移除内容中引用了平台域名的内联 script（动态创建监控脚本等）
  *   4. 替换残留的模板占位符（appName / appDescription / appAvatar 等）
- *   5. 注入自适应 basename 脚本，使应用在任意子路径下都能正确初始化 Router
+ *   5. 注入自适应 basename 脚本 + 独立部署 polyfill
+ *      （mock 平台 SDK 全局变量、拦截 /spark/ 前缀请求，保证应用在脱离平台时也能正常挂载）
  *
  * 使用：node sanitize-standalone.js [distDir]
  *   默认 distDir = dist/gh-pages
@@ -37,35 +38,131 @@ const PLATFORM_HOST_PATTERNS = [
   'p3-lark.byteimg.com',
 ];
 
-// 平台注入的内联脚本特征关键词（不含 {{}}、也不含域名，但同样需要移除）
-const PLATFORM_INLINE_MARKERS = [
-  'KSlardarWeb',
-  'slardar',
-  '__slardarErrBuf',
-  'collectEvent',
-  'LogAnalyticsObject',
-  'needsPolyfill',
-  'polyfills.js',
-  'window.appId',
-  'window.userId',
-  'window.tenantId',
-  'window.csrfToken',
-  'window.ENVIRONMENT',
-  'window._appInfo',
-  'appInfo',
-];
-
 function containsPlatformHost(str) {
   return PLATFORM_HOST_PATTERNS.some(function (h) {
     return str.indexOf(h) !== -1;
   });
 }
 
-function containsPlatformMarker(str) {
-  return PLATFORM_INLINE_MARKERS.some(function (m) {
-    return str.indexOf(m) !== -1;
-  });
-}
+// —— 独立部署 polyfill 脚本（注入到 <head> 最开头，在主 bundle 之前执行）——
+// 作用：
+//   1. 设置合理的平台全局变量默认值，避免 SDK 顶层初始化崩溃
+//   2. 拦截 fetch / XMLHttpRequest，对 /spark/ 前缀的平台接口直接返回 mock 响应
+//   3. 关闭 spark runtime 模式，让 SDK 走 standalone 降级路径
+const STANDALONE_POLYFILL = `
+<script>
+  // —— 独立部署 polyfill ——
+  // 在平台 SDK 加载前执行，mock 所有平台运行时依赖，确保应用脱离平台也能正常挂载。
+  (function () {
+    'use strict';
+
+    // 1. 基础全局变量：给 SDK 顶层初始化提供安全默认值
+    window.appId = window.appId || 'standalone-app';
+    window.userId = window.userId || '';
+    window.tenantId = window.tenantId || '';
+    window.token = window.token || '';
+    window.csrfToken = window.csrfToken || null;
+    window.ENVIRONMENT = window.ENVIRONMENT || 'production';
+    window.IS_MIAODA_PREVIEW = false;
+    window._IS_Spark_RUNTIME = false;  // 关键：关闭 spark runtime，SDK 走 standalone 降级
+    window._FULLSTACK_RUNTIME_INITIALIZED__ = true;  // 阻止 SDK 重复执行顶层初始化
+
+    // 2. 拦截 fetch：对 /spark/ 与 /app/*/__runtime__/ 平台接口直接返回 mock 成功响应
+    var originalFetch = window.fetch;
+    if (originalFetch) {
+      window.fetch = function (input, init) {
+        var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+        // 命中平台运行时接口 → 直接返回 mock 成功，不发真实请求
+        if (
+          url.indexOf('/spark/') !== -1 ||
+          url.indexOf('/__runtime__/') !== -1 ||
+          url.indexOf('/get_published') !== -1 ||
+          url.indexOf('/current_server_timestamp') !== -1 ||
+          url.indexOf('/observability/') !== -1 ||
+          url.indexOf('/metrics/collect') !== -1 ||
+          url.indexOf('/logs/collect') !== -1 ||
+          url.indexOf('/traces/collect') !== -1
+        ) {
+          return Promise.resolve(new Response(JSON.stringify({
+            code: 0,
+            status_code: '0',
+            msg: 'ok',
+            data: {
+              app_info: {
+                app_name: 'Hybrid Matter',
+                app_avatar: './favicon.svg',
+                app_description: 'Xiang Chenghao Digital Media Art Portfolio'
+              },
+              app_runtime_extra: {
+                bucket: { default_bucket_id: 'default' }
+              },
+              timestampNs: '0'
+            }
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          }));
+        }
+        return originalFetch.apply(this, arguments);
+      };
+    }
+
+    // 3. 拦截 XMLHttpRequest：同样拦截 /spark/ 等平台接口
+    if (window.XMLHttpRequest) {
+      var OriginalXHR = window.XMLHttpRequest;
+      window.XMLHttpRequest = function () {
+        var xhr = new OriginalXHR();
+        var _url = '';
+        var _isMock = false;
+        var _method = 'GET';
+
+        var originalOpen = xhr.open;
+        xhr.open = function (method, url) {
+          _method = method;
+          _url = url;
+          _isMock =
+            url.indexOf('/spark/') !== -1 ||
+            url.indexOf('/__runtime__/') !== -1 ||
+            url.indexOf('/get_published') !== -1 ||
+            url.indexOf('/observability/') !== -1 ||
+            url.indexOf('/metrics/collect') !== -1 ||
+            url.indexOf('/logs/collect') !== -1 ||
+            url.indexOf('/traces/collect') !== -1;
+          return originalOpen.apply(this, arguments);
+        };
+
+        var originalSend = xhr.send;
+        xhr.send = function (body) {
+          if (_isMock) {
+            // 异步模拟成功响应
+            var self = this;
+            setTimeout(function () {
+              try {
+                Object.defineProperty(self, 'readyState', { value: 4, writable: true });
+                Object.defineProperty(self, 'status', { value: 200, writable: true });
+                Object.defineProperty(self, 'statusText', { value: 'OK', writable: true });
+                Object.defineProperty(self, 'responseText', {
+                  value: JSON.stringify({
+                    code: 0,
+                    status_code: '0',
+                    data: { app_info: { app_name: 'Hybrid Matter' } }
+                  }),
+                  writable: true
+                });
+                if (self.onreadystatechange) self.onreadystatechange();
+                if (self.onload) self.onload();
+              } catch (e) { /* ignore */ }
+            }, 0);
+            return;
+          }
+          return originalSend.apply(this, arguments);
+        };
+
+        return xhr;
+      };
+    }
+  })();
+</script>`;
 
 // —— 主流程 ——
 const indexPath = path.resolve(DIST_DIR, 'index.html');
@@ -80,6 +177,7 @@ const stats = {
   remoteScriptsRemoved: 0,
   placeholdersReplaced: 0,
   basenameInjected: false,
+  polyfillInjected: false,
 };
 
 // 1. 移除内联 script（内容含 {{ }} 模板变量，或引用了平台域名的）
@@ -87,8 +185,7 @@ const SCRIPT_INLINE_RE = /<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/gi;
 html = html.replace(SCRIPT_INLINE_RE, function (match, content) {
   const hasTemplate = content.indexOf('{{') !== -1 || content.indexOf('}}') !== -1;
   const hasPlatformHost = containsPlatformHost(content);
-  const hasPlatformMarker = containsPlatformMarker(content);
-  if (hasTemplate || hasPlatformHost || hasPlatformMarker) {
+  if (hasTemplate || hasPlatformHost) {
     stats.inlineScriptsRemoved++;
     return '';
   }
@@ -138,13 +235,19 @@ if (leftoverMatches) {
   html = html.replace(LEFTOVER_RE, '');
 }
 
-// 4. 注入自适应 basename 脚本（放在 <head> 最开头）
+// 4. 注入自适应 basename 脚本 + 独立部署 polyfill（放在 <head> 最开头）
 const basenameScript =
   "<script>window.__BASENAME__ = new URL('.', document.baseURI).pathname;</script>";
 
 if (html.indexOf('window.__BASENAME__') === -1) {
   html = html.replace('<head>', '<head>\n    ' + basenameScript);
   stats.basenameInjected = true;
+}
+
+// 注入独立部署 polyfill（必须在主 bundle 之前执行，所以放 <head> 最开头，紧跟 basename 之后）
+if (html.indexOf('_IS_Spark_RUNTIME') === -1) {
+  html = html.replace('<head>', '<head>\n  ' + STANDALONE_POLYFILL.trim());
+  stats.polyfillInjected = true;
 }
 
 // 5. 清理连续的空行（可选，让输出更整洁）
@@ -155,8 +258,9 @@ fs.writeFileSync(indexPath, html, 'utf-8');
 
 // —— 输出结果 ——
 console.log('[sanitize] ✅ index.html 清理完成');
-console.log('  移除内联 script:   ' + stats.inlineScriptsRemoved + ' 个');
-console.log('  移除外链 script:   ' + stats.remoteScriptsRemoved + ' 个');
-console.log('  替换模板占位符:     ' + stats.placeholdersReplaced + ' 处');
-console.log('  注入 basename 脚本: ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
-console.log('  输出文件:           ' + indexPath);
+console.log('  移除内联 script:     ' + stats.inlineScriptsRemoved + ' 个');
+console.log('  移除外链 script:     ' + stats.remoteScriptsRemoved + ' 个');
+console.log('  替换模板占位符:       ' + stats.placeholdersReplaced + ' 处');
+console.log('  注入 basename 脚本:   ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
+console.log('  注入 standalone polyfill: ' + (stats.polyfillInjected ? '是' : '已存在，跳过'));
+console.log('  输出文件:             ' + indexPath);
