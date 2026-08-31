@@ -288,10 +288,8 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
       const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
       const threshold = 50;
 
-      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold) {
-        if (deltaY > 0) goNext();
-        else goPrev();
-      } else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      // 移动端只响应左右滑动翻页，上下滑动留给页面内滚动（如 About 长文本）
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
         if (deltaX > 0) goNext();
         else goPrev();
       }
