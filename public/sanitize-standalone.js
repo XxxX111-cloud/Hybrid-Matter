@@ -91,7 +91,8 @@ const STANDALONE_POLYFILL = `
               app_info: {
                 app_name: 'Hybrid Matter',
                 app_avatar: './favicon.svg',
-                app_description: 'Xiang Chenghao Digital Media Art Portfolio'
+                app_description: 'Xiang Chenghao Digital Media Art Portfolio',
+                show_badge: false
               },
               app_runtime_extra: {
                 bucket: { default_bucket_id: 'default' }
@@ -145,7 +146,14 @@ const STANDALONE_POLYFILL = `
                   value: JSON.stringify({
                     code: 0,
                     status_code: '0',
-                    data: { app_info: { app_name: 'Hybrid Matter' } }
+                    data: {
+                      app_info: {
+                        app_name: 'Hybrid Matter',
+                        app_avatar: './favicon.svg',
+                        app_description: 'Xiang Chenghao Digital Media Art Portfolio',
+                        show_badge: false
+                      }
+                    }
                   }),
                   writable: true
                 });

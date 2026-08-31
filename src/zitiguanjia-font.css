@@ -22,10 +22,13 @@ body {
 }
 
 /* —— 隐藏平台右下角「豆包 AI 生成」水印标识 —— */
+/* 水印真实结构：<div data-custom-element="doubao-watermark"> / "doubao-watermark-mobile"，类名 doubao-watermark */
+[data-custom-element*="doubao-watermark"],
+[data-custom-element*="watermark"],
 [class*="watermark"],
+[class*="doubao"],
 [class*="powered-by"],
 [class*="branding"],
-[class*="doubao"],
 [class*="miaoda-badge"],
 [class*="ai-generated"],
 [class*="brand-badge"],
