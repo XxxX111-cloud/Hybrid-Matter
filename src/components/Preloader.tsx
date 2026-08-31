@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image } from '@/components/ui/image';
 
-const LOGO_URL = 'https://aka.doubaocdn.com/s/bMz0OGdLxZ';
+const LOGO_URL = './logo-xh.png';
 
 interface PreloaderProps {
   /** 退出动画开始时回调（用于同步触发主页面入场） */
