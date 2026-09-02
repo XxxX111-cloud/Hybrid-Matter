@@ -13,59 +13,52 @@ interface VideoItem {
 
 const VIDEO_GALLERY: VideoItem[] = [
   {
-    title: '奶茶店',
-    description: '商业观察系列第一集',
-    videoUrl: 'https://aka.doubaocdn.com/s/DcdbJWUCVQ',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/lZJ2rxkFGC',
+    title: '便利店，为什么要抢瑞幸的客人',
+    description: 'DT商业观察 第1集',
+    videoUrl: 'https://aka.doubaocdn.com/s/U3dxRA2WBx',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '小蓝灯',
-    description: '商业观察系列第二集',
-    videoUrl: 'https://aka.doubaocdn.com/s/cMAIhNnCyk',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/2E0o4Uk3CN',
+    title: '车越来越重，谁在付出代价',
+    description: 'DT商业观察 第2集',
+    videoUrl: 'https://aka.doubaocdn.com/s/pnL0yetVVw',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '茉莉花',
-    description: '商业观察系列第三集',
-    videoUrl: 'https://aka.doubaocdn.com/s/6bbzJrQlhM',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/jSUQDK1ngX',
+    title: '满街"小蓝灯"，为什么被叫停？',
+    description: 'DT商业观察 第3集',
+    videoUrl: 'https://aka.doubaocdn.com/s/gAjKUVjiex',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '牛肉',
-    description: '商业观察系列第四集',
-    videoUrl: 'https://aka.doubaocdn.com/s/GUGiWsOpVa',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/lZJ2rxkFGC',
+    title: '奶茶店，开始抢酒吧的生意了',
+    description: 'DT商业观察 第4集',
+    videoUrl: 'https://aka.doubaocdn.com/s/ToNR48eq1S',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '车越来越重',
-    description: '商业观察系列第五集',
-    videoUrl: 'https://aka.doubaocdn.com/s/B1iDnziyL2',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/2E0o4Uk3CN',
+    title: '为什么牛肉涨价了？',
+    description: 'DT商业观察 第5集',
+    videoUrl: 'https://aka.doubaocdn.com/s/uJz3jMG4Cu',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '便利店',
-    description: '商业观察系列第六集',
-    videoUrl: 'https://aka.doubaocdn.com/s/l0q2F2vht0',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/jSUQDK1ngX',
+    title: '一朵茉莉花，怎么成了新茶饮顶流',
+    description: 'DT商业观察 第6集',
+    videoUrl: 'https://aka.doubaocdn.com/s/Gp1anOMjv2',
+    thumbnailUrl: '',
     duration: '--:--',
   },
   {
-    title: '3000万的豪宅',
-    description: '商业观察系列第七集',
-    videoUrl: 'https://aka.doubaocdn.com/s/bhW1Q8u9z4',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/lZJ2rxkFGC',
-    duration: '--:--',
-  },
-  {
-    title: '4月15日',
-    description: '商业观察系列第八集',
-    videoUrl: 'https://aka.doubaocdn.com/s/1ZKeTNroo1',
-    thumbnailUrl: 'https://aka.doubaocdn.com/s/2E0o4Uk3CN',
+    title: '字节押注的牙膏冲到行业第三',
+    description: 'DT商业观察 第7集',
+    videoUrl: 'https://aka.doubaocdn.com/s/FTN4r0DcVI',
+    thumbnailUrl: '',
     duration: '--:--',
   },
 ];
@@ -120,12 +113,14 @@ export default function DtBusinessDialog() {
     return () => clearInterval(timer);
   }, [currentVideo]);
 
-  // 切换视频自动播放
+  // 切换视频时重置进度 & 重新加载（不自播）
   useEffect(() => {
     if (!isOpen || !videoRef.current) return;
     const el = videoRef.current;
     el.load();
-    el.play().catch(() => {});
+    setProgress(0);
+    setCurrentTime('0:00');
+    setDuration('0:00');
   }, [currentVideoIndex, isOpen]);
 
   // 视频进度
@@ -225,7 +220,7 @@ export default function DtBusinessDialog() {
                   <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
                 </div>
                 <div className="text-white/40 text-[11px] uppercase tracking-[0.25em]">
-                  DT Business Observer · 08 Episodes
+                  DT Business Observer · 07 Episodes
                 </div>
               </div>
               <button

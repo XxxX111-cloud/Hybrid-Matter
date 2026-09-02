@@ -5,9 +5,9 @@ import SimpleCarousel from '@/components/SimpleCarousel/SimpleCarousel';
 import { useWorksDialog } from './WorksDialogContext';
 
 const SLIDES = [
-  { image: 'https://aka.doubaocdn.com/s/lZJ2rxkFGC', caption: '现场效果 1' },
-  { image: 'https://aka.doubaocdn.com/s/2E0o4Uk3CN', caption: '现场效果 2' },
-  { image: 'https://aka.doubaocdn.com/s/jSUQDK1ngX', caption: '现场效果 3' },
+  { image: 'https://aka.doubaocdn.com/s/ezB4Vhaf8l', caption: '作品展示 1' },
+  { image: 'https://aka.doubaocdn.com/s/bwSHvIVTXA', caption: '作品展示 2' },
+  { image: 'https://aka.doubaocdn.com/s/aAEl2adszA', caption: '作品展示 3' },
 ];
 
 export default function PreppedFoodDialog() {
@@ -95,9 +95,10 @@ export default function PreppedFoodDialog() {
                 >
                   <video
                     ref={videoRef}
-                    src="https://aka.doubaocdn.com/s/TXlU5OsurH"
+                    src="https://aka.doubaocdn.com/s/MYXGUeP3N9"
                     controls
                     playsInline
+                    loop
                     preload="metadata"
                     className="w-full h-auto object-contain"
                     style={{ maxHeight: '45vh' }}

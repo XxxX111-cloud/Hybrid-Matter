@@ -47,12 +47,12 @@ export default function AboutSection() {
               className="shrink-0 w-full max-w-[360px] md:max-w-[420px] aspect-video bg-transparent mx-auto lg:mx-0 overflow-hidden"
             >
               <video
-                src="./about-title-video.mp4"
+                src="https://aka.doubaocdn.com/s/nPQSUWezc8"
                 autoPlay
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="auto"
                 className="w-full h-full object-contain pointer-events-none"
               />
             </StaggerItem>

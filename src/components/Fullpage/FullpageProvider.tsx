@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { PageTransitionProvider, type TransitionDirection } from './PageTransitionContext';
 import ClipMaskOverlay, { type MaskShape } from './ClipMaskOverlay';
+import { cn } from '@/lib/utils';
 
 interface FullpageContextValue {
   currentIndex: number;
@@ -19,6 +20,11 @@ interface FullpageContextValue {
   goPrev: () => void;
   total: number;
   registerLock: (key: string, locked: boolean) => void;
+  /**
+   * 强制跳转，跳过 isAnimating 和 isLocked 检查
+   * 用于用户明确点击按钮需要翻页的场景，保证一定能响应
+   */
+  forceGoTo: (index: number) => void;
 }
 
 export const FullpageContext = createContext<FullpageContextValue | null>(null);
@@ -115,9 +121,34 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
     (index: number) => {
       if (isAnimatingRef.current) return;
       if (isLocked()) return;
+      performTransition(index);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentIndex, total, isLocked],
+  );
+
+  /**
+   * 强制翻页：跳过 isAnimating / isLocked 检查，立即执行转场
+   *
+   * 适用场景：用户在页面内通过明确的按钮点击触发翻页（如「查看作品」按钮），
+   * 此时如果恰好处于动画收尾阶段或被某个锁意外锁住，普通 goTo 会静默 return，
+   * 用户感觉「点了没反应」。forceGoTo 确保点击一定有响应。
+   */
+  const forceGoTo = useCallback(
+    (index: number) => {
       const clamped = Math.max(0, Math.min(total - 1, index));
       if (clamped === currentIndex) return;
+      // 如果正在动画中，先重置标志位确保新转场能启动
+      isAnimatingRef.current = false;
+      performTransition(clamped);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentIndex, total],
+  );
 
+  // 共享的转场执行逻辑
+  const performTransition = useCallback(
+    (clamped: number) => {
       isAnimatingRef.current = true;
 
       const { shape, direction: dir } = getTransitionConfig(currentIndex, clamped);
@@ -139,7 +170,6 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
         setTurnKey((k) => k + 1);
 
         // 3. 让遮罩保持一帧再收缩（避免闪烁）
-        //    收缩由 AnimatePresence 的 exit 控制，把 active 置为 false 即可
         window.requestAnimationFrame(() => {
           setMaskActive(false);
         });
@@ -150,7 +180,8 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
         isAnimatingRef.current = false;
       }, TOTAL_LOCK_MS);
     },
-    [currentIndex, total, isLocked, onIndexChange],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentIndex, pageMaskColors, onIndexChange],
   );
 
   const goNext = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo]);
@@ -288,8 +319,10 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
       const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
       const threshold = 50;
 
-      // 移动端只响应左右滑动翻页，上下滑动留给页面内滚动（如 About 长文本）
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold) {
+        if (deltaY > 0) goNext();
+        else goPrev();
+      } else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
         if (deltaX > 0) goNext();
         else goPrev();
       }
@@ -310,8 +343,8 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
   const handleRightClick = () => goNext();
 
   const value = useMemo<FullpageContextValue>(
-    () => ({ currentIndex, goTo, goNext, goPrev, total, registerLock }),
-    [currentIndex, goTo, goNext, goPrev, total, registerLock],
+    () => ({ currentIndex, goTo, goNext, goPrev, total, registerLock, forceGoTo }),
+    [currentIndex, goTo, goNext, goPrev, total, registerLock, forceGoTo],
   );
 
   return (
@@ -343,21 +376,27 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
           )}
         </AnimatePresence>
 
-        {/* 左右点击翻页区域 */}
+        {/* 左右点击翻页区域
+           注意：宽度限制为 w-16 (64px)，避免过宽覆盖到页面内容按钮导致点击被遮挡
+           禁用态必须加 pointer-events-none，否则 disabled button 仍会拦截点击事件 */}
         <button
           type="button"
           onClick={handleLeftClick}
           aria-label="Previous page"
-          className="absolute left-0 top-0 bottom-0 z-20 w-[25%] max-w-[200px] opacity-0 hover:opacity-100 transition-opacity bg-transparent hover:bg-black/5"
-          style={{ cursor: currentIndex > 0 ? 'w-resize' : 'default' }}
+          className={cn(
+            'absolute left-0 top-0 bottom-0 z-20 w-16 opacity-0 hover:opacity-100 transition-opacity bg-transparent',
+            (currentIndex === 0 || isLocked()) ? 'pointer-events-none' : 'hover:bg-black/5 cursor-w-resize',
+          )}
           disabled={currentIndex === 0 || isLocked()}
         />
         <button
           type="button"
           onClick={handleRightClick}
           aria-label="Next page"
-          className="absolute right-0 top-0 bottom-0 z-20 w-[25%] max-w-[200px] opacity-0 hover:opacity-100 transition-opacity bg-transparent hover:bg-black/5"
-          style={{ cursor: currentIndex < total - 1 ? 'e-resize' : 'default' }}
+          className={cn(
+            'absolute right-0 top-0 bottom-0 z-20 w-16 opacity-0 hover:opacity-100 transition-opacity bg-transparent',
+            (currentIndex === total - 1 || isLocked()) ? 'pointer-events-none' : 'hover:bg-black/5 cursor-e-resize',
+          )}
           disabled={currentIndex === total - 1 || isLocked()}
         />
 

@@ -1,29 +1,28 @@
-import { Award, ArrowUpRight } from 'lucide-react';
+import { Award, Eye } from 'lucide-react';
+import { logger } from '@lark-apaas/client-toolkit-lite';
 import { MOCK_AWARDS, type IAward } from '@/data/portfolio';
 import StaggerItem from '@/components/Fullpage/StaggerItem';
 import SplitTextTitle from '@/components/Fullpage/SplitTextTitle';
 import Ferrofluid from '@/components/Ferrofluid/Ferrofluid';
-import { useWorksDialog } from '@/components/WorksDialog/WorksDialogContext';
 import { useFullpage } from '@/components/Fullpage/FullpageProvider';
 
 export default function AwardsSection() {
-  const { openDialog } = useWorksDialog();
-  const { registerLock } = useFullpage();
+  const { forceGoTo, currentIndex, total } = useFullpage();
 
-  // 奖项 → 对应作品弹窗 id 的映射（只有在 Works 中有弹窗的奖项才链接）
-  const AWARD_TO_WORK: Record<string, 'prepped-food-spring' | 'dt-business-video' | 'throat-civilization' | 'yi-tao'> = {
-    'mapping-finalist': 'prepped-food-spring', // 预制菜也有春天
-    'huichuang-youth': 'throat-civilization', // 喉间文明
-    'future-designer': 'yi-tao', // 意陶
-    'future-designer-14th': 'yi-tao', // 意陶 第14届一等奖
-  };
-
-  const handleAwardClick = (award: IAward) => {
-    const workKey = AWARD_TO_WORK[award.id];
-    if (workKey) {
-      registerLock('works-dialog', true);
-      openDialog(workKey);
-    }
+  /**
+   * 点击「查看作品」跳转到 Works 页面（索引 2）
+   *
+   * 翻页实现说明：
+   * - 全站使用自定义 FullpageProvider（非 fullpage.js），通过 React state + clip-path 遮罩实现转场
+   * - 页面索引：0=Hero, 1=About, 2=Works, 3=Awards, 4=Skills, 5=Contact
+   * - 使用 forceGoTo 而非 goTo：跳过 isAnimating / isLocked 检查，确保按钮点击一定有响应
+   *   （普通 goTo 在动画收尾或被意外锁定时会静默 return，用户感觉"点了没反应"）
+   */
+  const handleViewWorks = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 阻止事件冒泡到任何父级监听，避免干扰
+    e.stopPropagation();
+    logger.info('[Awards] 查看作品按钮点击', { currentIndex, total, target: 2 });
+    forceGoTo(2);
   };
 
   return (
@@ -75,63 +74,49 @@ export default function AwardsSection() {
           </div>
 
           <div className="space-y-4 md:space-y-5 pb-8 mt-8">
-            {MOCK_AWARDS.map((award: IAward, idx: number) => {
-              const linkedWork = AWARD_TO_WORK[award.id];
-              const clickable = Boolean(linkedWork);
-              return (
-                <StaggerItem
-                  key={award.id}
-                  delay={0.2 + idx * 0.08}
-                  offsetMultiplier={0.8}
-                  enterScale={1.01}
-                >
-                  <div
-                    onClick={clickable ? () => handleAwardClick(award) : undefined}
-                    className={[
-                      'group relative border rounded-2xl p-6 md:p-8 bg-white/[0.02] backdrop-blur-sm transition-all',
-                      clickable
-                        ? 'cursor-pointer hover:bg-white/[0.06] hover:border-white/30 hover:-translate-y-0.5'
-                        : 'border-white/15 hover:bg-white/[0.05] hover:border-white/25',
-                    ].join(' ')}
-                    role={clickable ? 'button' : undefined}
-                    tabIndex={clickable ? 0 : undefined}
-                    onKeyDown={clickable
-                      ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleAwardClick(award); } }
-                      : undefined}
-                  >
-                    <div className="flex items-start gap-4 md:gap-6">
-                      <div className="shrink-0 size-10 md:size-12 rounded-full bg-white/10 flex items-center justify-center">
-                        <Award className="size-5 md:size-6 text-white" />
+            {MOCK_AWARDS.map((award: IAward, idx: number) => (
+              <StaggerItem
+                key={award.id}
+                delay={0.2 + idx * 0.08}
+                offsetMultiplier={0.8}
+                enterScale={1.01}
+              >
+                <div className="group relative border rounded-2xl p-6 md:p-8 bg-white/[0.02] backdrop-blur-sm border-white/15 transition-all">
+                  <div className="flex items-start gap-4 md:gap-6">
+                    <div className="shrink-0 size-10 md:size-12 rounded-full bg-white/10 flex items-center justify-center">
+                      <Award className="size-5 md:size-6 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-2">
+                        <h3
+                          className="text-white font-medium"
+                          style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'clamp(18px, 2.5vw, 24px)',
+                          }}
+                        >
+                          {award.title}
+                        </h3>
+                        <span className="text-white/50 text-sm shrink-0">
+                          {award.year}
+                        </span>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-2">
-                          <h3
-                            className="text-white font-medium"
-                            style={{
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: 'clamp(18px, 2.5vw, 24px)',
-                            }}
-                          >
-                            {award.title}
-                          </h3>
-                          <span className="text-white/50 text-sm shrink-0">
-                            {award.year}
-                          </span>
-                        </div>
-                        <p className="text-white/60 text-sm md:text-base leading-relaxed">
-                          {award.detail}
-                        </p>
-                      </div>
-                      {clickable && (
-                        <div className="shrink-0 self-start size-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 group-hover:text-white group-hover:border-white/50 group-hover:bg-white/10 transition-all">
-                          <ArrowUpRight className="size-4" />
-                        </div>
-                      )}
+                      <p className="text-white/60 text-sm md:text-base leading-relaxed">
+                        {award.detail}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleViewWorks}
+                        className="relative z-20 mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-black text-[13px] font-medium hover:bg-white/90 active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer select-none"
+                      >
+                        <Eye className="size-4" />
+                        查看作品
+                      </button>
                     </div>
                   </div>
-                </StaggerItem>
-              );
-            })}
+                </div>
+              </StaggerItem>
+            ))}
           </div>
         </div>
       </div>

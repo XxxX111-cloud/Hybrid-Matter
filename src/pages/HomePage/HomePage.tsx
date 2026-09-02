@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import logoXh from '@/assets/logo-xh.png';
 import { FullpageProvider } from '@/components/Fullpage/FullpageProvider';
 import FullpageDots from '@/components/Fullpage/FullpageDots';
 import BackgroundVideo from '@/components/BackgroundVideo';
@@ -65,7 +64,7 @@ export default function HomePage() {
               {/* 导航浮层（pointer-events-none 由父容器统一设置，子组件需自行开启） */}
               <div className="pointer-events-auto">
                 <BubbleMenu
-                  logo={logoXh}
+                  logo="https://aka.doubaocdn.com/s/bMz0OGdLxZ"
                   useFixedPosition={true}
                   menuBg="#ffffff"
                   menuContentColor="#111111"

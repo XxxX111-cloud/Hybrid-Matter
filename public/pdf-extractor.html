@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Image Extractor</title>
+  <style>
+    body { margin: 10px; font-family: sans-serif; background: #222; color: #eee; }
+    #status { margin-bottom: 10px; }
+    #thumbs { display: flex; flex-wrap: wrap; gap: 10px; }
+    .thumb { 
+      width: 200px; background: #333; padding: 5px; border-radius: 4px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .thumb img { width: 100%; height: auto; }
+    .thumb .info { font-size: 11px; margin-top: 4px; color: #aaa; }
+    .thumb a { font-size: 11px; color: #4af; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div id="status">Loading...</div>
+  <div id="thumbs"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // Render all pages that have photos and make them downloadable
+    const photoPages = [6, 7, 15, 18, 20, 21, 23, 24, 33, 34, 36, 37, 38, 39, 40, 41];
+    const pdfUrl = location.pathname.replace(/pdf-extractor\.html.*$/, '') + 'throat-civ-slides.pdf';
+    const scale = 2;
+    
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    async function main() {
+      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+      document.getElementById('status').textContent = 'PDF loaded: ' + pdf.numPages + ' pages';
+      
+      const thumbsDiv = document.getElementById('thumbs');
+      
+      for (let i = 0; i < photoPages.length; i++) {
+        const pageNum = photoPages[i];
+        if (pageNum > pdf.numPages) continue;
+        
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        thumb.innerHTML = `
+          <img src="${dataUrl}" alt="Page ${pageNum}" />
+          <div class="info">Page ${pageNum} (${Math.round(viewport.width)}x${Math.round(viewport.height)})</div>
+          <a href="${dataUrl}" download="page_${pageNum}.png">Download PNG</a>
+        `;
+        thumbsDiv.appendChild(thumb);
+        
+        document.getElementById('status').textContent = 
+          `Rendered ${i+1}/${photoPages.length} pages`;
+      }
+      
+      document.getElementById('status').textContent = 
+        `Done! Rendered ${photoPages.length} pages. Total images available for download.`;
+      document.title = 'PDF Photos Extracted';
+    }
+    
+    main().catch(e => {
+      document.getElementById('status').textContent = 'Error: ' + e.message;
+      console.error(e);
+    });
+  </script>
+</body>
+</html>

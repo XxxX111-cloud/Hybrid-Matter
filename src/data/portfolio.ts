@@ -39,8 +39,8 @@ export const MOCK_WORKS: IWork[] = [
     title: '喉间文明',
     category: 'Interactive Installation',
     description:
-      '综合类新实验装置作品，负责装置搭建以及 Arduino 交互程序实现，探索声音、身体与技术的边界。',
-    imageUrl: 'https://aka.doubaocdn.com/s/0MuuMzXm5K',
+      '综合类新实验装置作品，负责装置整体搭建以及 Arduino 交互系统模块设计与实现，探索语言、身体与技术的边界。',
+    imageUrl: 'https://aka.doubaocdn.com/s/FUZWRGVhde',
   },
   {
     id: 'prepped-food-spring',
@@ -65,7 +65,7 @@ export const MOCK_WORKS: IWork[] = [
     description:
       '商业观察视频号剪辑与运营，负责从选题、脚本、拍摄到后期合成的完整视频生产流程。',
     imageUrl:
-      'https://aka.doubaocdn.com/s/szq0KpKRcA',
+      'https://aka.doubaocdn.com/s/vpDG8P0km7',
   },
   {
     id: 'gfl-ar-dimension',
@@ -73,7 +73,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Interactive Installation / 交互装置',
     description:
       '广富林文明主题多卡牌组合 AR 交互设计，三分式实体卡牌联动 Unity VUFORIA 实现多目标同步识别与文明动画拼装。',
-    imageUrl: 'https://aka.doubaocdn.com/s/QNNLqFnm5f',
+    imageUrl: 'https://aka.doubaocdn.com/s/FZXrYV460z',
   },
 ];
 

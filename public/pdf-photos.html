@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Photo Cropper</title>
+  <style>
+    body { margin: 10px; font-family: sans-serif; background: #222; color: #eee; }
+    #status { margin-bottom: 10px; }
+    #output { display: flex; flex-wrap: wrap; gap: 10px; }
+    .item { background: #333; padding: 5px; border-radius: 4px; }
+    .item img { display: block; max-width: 300px; height: auto; }
+    .item .info { font-size: 11px; margin-top: 4px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div id="status">Loading...</div>
+  <div id="output"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    const pdfUrl = location.pathname.replace(/pdf-photos\.html.*$/, '') + 'throat-civ-slides.pdf';
+    const scale = 2;
+    
+    // Pages with full-page or large photos and their approximate photo regions
+    // Format: [pageNum, label, x, y, width, height] - coordinates as fractions of page
+    const photoConfigs = [
+      // Page 6: full page,装置全貌 in right half
+      [6, 'cover_fullview', 0.52, 0.15, 0.42, 0.65],
+      // Page 15: 装置结构 photo (top-left area)
+      [15, 'structure_wood', 0.02, 0.15, 0.30, 0.55],
+      // Page 36: 装置侧面
+      [36, 'device_side', 0.15, 0.02, 0.70, 0.95],
+      // Page 37: 装置正面CRT
+      [37, 'device_front_crt', 0.10, 0.02, 0.80, 0.95],
+      // Page 38: 屏幕+嘴巴特写
+      [38, 'mouth_screen_detail', 0.12, 0.02, 0.76, 0.80],
+      // Page 39: 装置全景远镜头
+      [39, 'device_overview', 0.20, 0.10, 0.60, 0.75],
+      // Page 40: 电路细节
+      [40, 'circuit_detail', 0.15, 0.02, 0.70, 0.80],
+      // Page 41: 木结构管道细节
+      [41, 'wood_pipes', 0.18, 0.60, 0.64, 0.38],
+    ];
+    
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    async function main() {
+      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+      const output = document.getElementById('output');
+      
+      window._extractedPhotos = [];
+      
+      for (let i = 0; i < photoConfigs.length; i++) {
+        const [pageNum, label, fx, fy, fw, fh] = photoConfigs[i];
+        
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+        
+        // Render full page
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        
+        // Crop the photo region
+        const sx = Math.floor(viewport.width * fx);
+        const sy = Math.floor(viewport.height * fy);
+        const sw = Math.floor(viewport.width * fw);
+        const sh = Math.floor(viewport.height * fh);
+        
+        const cropped = document.createElement('canvas');
+        cropped.width = sw;
+        cropped.height = sh;
+        const croppedCtx = cropped.getContext('2d');
+        croppedCtx.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+        
+        const dataUrl = cropped.toDataURL('image/png');
+        
+        // Convert to Blob and store
+        const blob = await new Promise(r => cropped.toBlob(r, 'image/png'));
+        
+        window._extractedPhotos.push({
+          label,
+          pageNum,
+          dataUrl,
+          blob,
+          width: sw,
+          height: sh,
+        });
+        
+        // Display
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <img src="${dataUrl}" alt="${label}" />
+          <div class="info">${label} (${sw}x${sh}, p.${pageNum})</div>
+        `;
+        output.appendChild(item);
+        
+        document.getElementById('status').textContent = 
+          `Extracted ${i+1}/${photoConfigs.length}: ${label}`;
+      }
+      
+      document.getElementById('status').textContent = 
+        `Done! ${photoConfigs.length} photos extracted. window._extractedPhotos has the data.`;
+      document.title = 'Photos Extracted: ' + photoConfigs.length;
+    }
+    
+    main().catch(e => {
+      document.getElementById('status').textContent = 'Error: ' + e.message;
+      console.error(e);
+    });
+  </script>
+</body>
+</html>

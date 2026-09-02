@@ -1,3 +1,4 @@
+import { logger } from '@lark-apaas/client-toolkit-lite';
 /**
  * sanitize-standalone.js
  *
@@ -19,8 +20,8 @@
  * 通过 node public/sanitize-standalone.js 调用。
  */
 
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 // —— 配置 ——
 const DIST_DIR = process.argv[2] || 'dist/gh-pages';
@@ -91,8 +92,7 @@ const STANDALONE_POLYFILL = `
               app_info: {
                 app_name: 'Hybrid Matter',
                 app_avatar: './favicon.svg',
-                app_description: 'Xiang Chenghao Digital Media Art Portfolio',
-                show_badge: false
+                app_description: 'Xiang Chenghao Digital Media Art Portfolio'
               },
               app_runtime_extra: {
                 bucket: { default_bucket_id: 'default' }
@@ -146,14 +146,7 @@ const STANDALONE_POLYFILL = `
                   value: JSON.stringify({
                     code: 0,
                     status_code: '0',
-                    data: {
-                      app_info: {
-                        app_name: 'Hybrid Matter',
-                        app_avatar: './favicon.svg',
-                        app_description: 'Xiang Chenghao Digital Media Art Portfolio',
-                        show_badge: false
-                      }
-                    }
+                    data: { app_info: { app_name: 'Hybrid Matter' } }
                   }),
                   writable: true
                 });
@@ -175,7 +168,7 @@ const STANDALONE_POLYFILL = `
 // —— 主流程 ——
 const indexPath = path.resolve(DIST_DIR, 'index.html');
 if (!fs.existsSync(indexPath)) {
-  console.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
+  logger.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
   process.exit(1);
 }
 
@@ -265,10 +258,10 @@ html = html.replace(/\n\s*\n\s*\n/g, '\n\n');
 fs.writeFileSync(indexPath, html, 'utf-8');
 
 // —— 输出结果 ——
-console.log('[sanitize] ✅ index.html 清理完成');
-console.log('  移除内联 script:     ' + stats.inlineScriptsRemoved + ' 个');
-console.log('  移除外链 script:     ' + stats.remoteScriptsRemoved + ' 个');
-console.log('  替换模板占位符:       ' + stats.placeholdersReplaced + ' 处');
-console.log('  注入 basename 脚本:   ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
-console.log('  注入 standalone polyfill: ' + (stats.polyfillInjected ? '是' : '已存在，跳过'));
-console.log('  输出文件:             ' + indexPath);
+logger.info('[sanitize] ✅ index.html 清理完成');
+logger.info('  移除内联 script:     ' + stats.inlineScriptsRemoved + ' 个');
+logger.info('  移除外链 script:     ' + stats.remoteScriptsRemoved + ' 个');
+logger.info('  替换模板占位符:       ' + stats.placeholdersReplaced + ' 处');
+logger.info('  注入 basename 脚本:   ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
+logger.info('  注入 standalone polyfill: ' + (stats.polyfillInjected ? '是' : '已存在，跳过'));
+logger.info('  输出文件:             ' + indexPath);

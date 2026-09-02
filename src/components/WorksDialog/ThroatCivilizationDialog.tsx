@@ -1,22 +1,24 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Wrench, Cpu } from 'lucide-react';
 import SimpleCarousel from '@/components/SimpleCarousel/SimpleCarousel';
 import { useWorksDialog } from './WorksDialogContext';
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
+import { Image } from '@/components/ui/image';
 
 const GALLERY = [
-  { image: 'https://aka.doubaocdn.com/s/fNaygGIzpV', caption: '装置全貌' },
-  { image: 'https://aka.doubaocdn.com/s/Vn8nubXJVJ', caption: '装置细节 01' },
-  { image: 'https://aka.doubaocdn.com/s/LVmcbi1Uw2', caption: '装置搭建过程' },
-  { image: 'https://aka.doubaocdn.com/s/O4m4m0krJO', caption: '电路与舵机调试' },
-  { image: 'https://aka.doubaocdn.com/s/KMwWgRFbcV', caption: 'TouchDesigner 视觉系统' },
-  { image: 'https://aka.doubaocdn.com/s/La7WVng2tC', caption: 'Python 爬虫数据获取' },
-  { image: 'https://aka.doubaocdn.com/s/ZlvnoVSUUc', caption: '气囊与木结构' },
-  { image: 'https://aka.doubaocdn.com/s/IJblMi2TqU', caption: '现场交互展示' },
+  { image: resolveAppUrl('/throat-photos/01_device_front.jpg'), caption: '装置正面全貌' },
+  { image: resolveAppUrl('/throat-photos/02_device_overview.jpg'), caption: '展览现场全貌' },
+  { image: resolveAppUrl('/throat-photos/03_screen_mouth_detail.jpg'), caption: '屏幕流体与嘴巴近景' },
+  { image: resolveAppUrl('/throat-photos/04_device_side.jpg'), caption: '装置侧面与交互部件' },
+  { image: resolveAppUrl('/throat-photos/05_circuit_arduino.jpg'), caption: 'Arduino 电路系统细节' },
+  { image: resolveAppUrl('/throat-photos/06_wood_structure.jpg'), caption: '木结构与气管舵机' },
+  { image: resolveAppUrl('/throat-photos/07_wood_frame_build.jpg'), caption: '木结构框架搭建过程' },
+  { image: resolveAppUrl('/throat-photos/08_build_process.jpg'), caption: '团队搭建调试现场' },
 ];
 
-const VIDEO_URL = 'https://aka.doubaocdn.com/s/WcrEWDyUHs';
-const COVER_URL = 'https://aka.doubaocdn.com/s/0MuuMzXm5K';
+const VIDEO_URL = 'https://aka.doubaocdn.com/s/Yilds6r7lr';
+const COVER_URL = 'https://aka.doubaocdn.com/s/FUZWRGVhde';
 
 const SECTIONS = [
   {
@@ -47,7 +49,7 @@ const SECTIONS = [
       '3D 建模：雕刻及纹理绘制渲染',
     ],
     personalNote:
-      '个人职责：项诚皓负责装置搭建以及 Arduino 交互系统模块制作，包括 Arduino + L298N 电机驱动器控制 10 个气泵和 5 个舵机、vvvv 舵机运动与音频 FFT 映射、装置整体结构搭建与调试。',
+      '个人职责：项诚皓主导装置整体搭建以及 Arduino 交互系统模块的完整设计与实现——包括基于 Arduino Uno + L298N 电机驱动器的 10 路气泵与 5 路舵机控制电路、vvvv 舵机运动轨迹编程与音频 FFT 实时映射、木质胃体框架结构的搭建与机械调试，以及整套虚拟—现实闭环系统的联调与优化。',
   },
   {
     title: '艺术语境',
@@ -62,6 +64,7 @@ const SECTIONS = [
 export default function ThroatCivilizationDialog() {
   const { openWork, closeDialog } = useWorksDialog();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoError, setVideoError] = useState(false);
   const isOpen = openWork === 'throat-civilization';
 
   useEffect(() => {
@@ -118,9 +121,19 @@ export default function ThroatCivilizationDialog() {
                   第十届"汇创青春"综合类（新实验及装置）三等奖 / 国际赛优胜奖
                 </p>
                 <p className="text-white/40 text-xs mt-1">
-                  作者：项诚皓、郑伊伊、罗怡伟、张玥、秦文渊、朱奕恒
-                </p>
-              </div>
+                   作者：项诚皓、郑伊伊、罗怡伟、张玥、秦文渊、朱奕恒
+                 </p>
+                 <div className="flex flex-wrap gap-2 mt-3">
+                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs">
+                     <Wrench className="size-3.5" />
+                     装置搭建
+                   </span>
+                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs">
+                     <Cpu className="size-3.5" />
+                     Arduino 交互系统
+                   </span>
+                 </div>
+               </div>
               <button
                 type="button"
                 onClick={closeDialog}
@@ -132,23 +145,48 @@ export default function ThroatCivilizationDialog() {
             </div>
 
             {/* Body */}
-            <div className="p-6 sm:p-8 space-y-8 max-h-[85vh] overflow-y-auto">
-              {/* Video */}
-              <div className="w-full rounded-2xl overflow-hidden bg-black border border-white/10">
-                <div
-                  className="w-full bg-black flex items-center justify-center"
-                  style={{ maxHeight: '42vh' }}
-                >
-                  <video
-                    ref={videoRef}
-                    src={VIDEO_URL}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-auto object-contain"
+              <div className="p-6 sm:p-8 space-y-8 max-h-[85vh] overflow-y-auto">
+                {/* Video */}
+                <div className="w-full rounded-2xl overflow-hidden bg-black border border-white/10">
+                {videoError ? (
+                  <div
+                    className="w-full bg-black flex flex-col items-center justify-center relative"
+                    style={{ minHeight: '280px', maxHeight: '42vh' }}
+                  >
+                    <Image
+                      src={COVER_URL}
+                      alt="喉间文明 视频封面"
+                      className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    />
+                    <div className="relative z-10 text-center space-y-2 px-6">
+                      <div className="w-12 h-12 mx-auto rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                      </div>
+                      <p className="text-white/70 text-sm">视频暂不可用</p>
+                      <p className="text-white/40 text-xs">可查看下方 Gallery 了解装置细节</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="w-full bg-black flex items-center justify-center"
                     style={{ maxHeight: '42vh' }}
-                  />
-                </div>
+                  >
+                    <video
+                      ref={videoRef}
+                      src={VIDEO_URL}
+                      controls
+                      loop
+                      playsInline
+                      preload="metadata"
+                      poster={COVER_URL}
+                      onError={() => setVideoError(true)}
+                      className="w-full h-auto object-contain"
+                      style={{ maxHeight: '42vh' }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Gallery */}
