@@ -13,6 +13,8 @@ export interface IAward {
   title: string;
   detail: string;
   year: string;
+  /** 关联的作品 id（来自 MOCK_WORKS），有对应作品时点击作品名可跳转到 Works 页 */
+  workId?: string;
 }
 
 export interface ISkill {
@@ -89,18 +91,21 @@ export const MOCK_AWARDS: IAward[] = [
     title: '重庆国际光影艺术节 Mapping 大赛 · 决赛入围',
     detail: '团队项目《预制菜也有春天》入选 2025 重庆国际光影艺术节 Mapping 大赛决赛',
     year: '2025',
+    workId: 'prepped-food-spring',
   },
   {
     id: 'future-designer',
     title: '未来设计师·全国高校数字艺术设计大赛 · 上海赛区二等奖',
     detail: '作品《意陶》获第 13 届未来设计师 NCDA 上海赛区二等奖（负责整体交互程序编写）',
     year: '2025',
+    workId: 'yitao',
   },
   {
     id: 'future-designer-14th',
     title: '第 14 届未来设计师·全国高校数字艺术设计大赛省级赛陶瓷艺术与科技赛道上海赛区一等奖',
     detail: '作品《意陶》获第 14 届未来设计师·全国高校数字艺术设计大赛省级赛陶瓷艺术与科技赛道上海赛区一等奖',
     year: '2025',
+    workId: 'yitao',
   },
   {
     id: 'huichuang-youth',
@@ -108,6 +113,7 @@ export const MOCK_AWARDS: IAward[] = [
     detail:
       '装置作品《喉间文明》获第十届"汇创青春"综合类（新实验及装置）三等奖 / 国际赛优胜奖（负责装置搭建与 Arduino 交互程序实现）',
     year: '2025',
+    workId: 'throat-civilization',
   },
 ];
 
