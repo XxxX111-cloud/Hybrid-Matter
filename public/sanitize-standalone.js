@@ -1,4 +1,3 @@
-import { logger } from '@lark-apaas/client-toolkit-lite';
 /**
  * sanitize-standalone.js
  *
@@ -20,8 +19,8 @@ import { logger } from '@lark-apaas/client-toolkit-lite';
  * 通过 node public/sanitize-standalone.js 调用。
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // —— 配置 ——
 const DIST_DIR = process.argv[2] || 'dist/gh-pages';
@@ -168,7 +167,7 @@ const STANDALONE_POLYFILL = `
 // —— 主流程 ——
 const indexPath = path.resolve(DIST_DIR, 'index.html');
 if (!fs.existsSync(indexPath)) {
-  logger.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
+  console.error('[sanitize] ❌ 找不到 index.html: ' + indexPath);
   process.exit(1);
 }
 
@@ -258,10 +257,10 @@ html = html.replace(/\n\s*\n\s*\n/g, '\n\n');
 fs.writeFileSync(indexPath, html, 'utf-8');
 
 // —— 输出结果 ——
-logger.info('[sanitize] ✅ index.html 清理完成');
-logger.info('  移除内联 script:     ' + stats.inlineScriptsRemoved + ' 个');
-logger.info('  移除外链 script:     ' + stats.remoteScriptsRemoved + ' 个');
-logger.info('  替换模板占位符:       ' + stats.placeholdersReplaced + ' 处');
-logger.info('  注入 basename 脚本:   ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
-logger.info('  注入 standalone polyfill: ' + (stats.polyfillInjected ? '是' : '已存在，跳过'));
-logger.info('  输出文件:             ' + indexPath);
+console.log('[sanitize] ✅ index.html 清理完成');
+console.log('  移除内联 script:     ' + stats.inlineScriptsRemoved + ' 个');
+console.log('  移除外链 script:     ' + stats.remoteScriptsRemoved + ' 个');
+console.log('  替换模板占位符:       ' + stats.placeholdersReplaced + ' 处');
+console.log('  注入 basename 脚本:   ' + (stats.basenameInjected ? '是' : '已存在，跳过'));
+console.log('  注入 standalone polyfill: ' + (stats.polyfillInjected ? '是' : '已存在，跳过'));
+console.log('  输出文件:             ' + indexPath);
