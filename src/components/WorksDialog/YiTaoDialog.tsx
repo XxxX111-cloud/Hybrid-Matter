@@ -1,11 +1,12 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useWorksDialog } from './WorksDialogContext';
 import { Image } from '@/components/ui/image';
 
-const VIDEO_URL = 'https://aka.doubaocdn.com/s/3dg4m3GRDH';
-const POSTER_URL = 'https://aka.doubaocdn.com/s/R20SI3H2tR';
+const VIDEO_URL = resolveAppUrl('/assets/yitao-demo.mp4');
+const POSTER_URL = resolveAppUrl('/assets/yitao-poster.png');
 
 interface PhaseImage {
   src: string;
@@ -36,7 +37,7 @@ const PHASES: Phase[] = [
         content:
           '陶艺作为非物质文化遗产，具有深厚的文化内涵和独特的艺术风格。陶瓷艺术在中国发源年代久远，样貌繁多，在世界历史上中国的陶瓷艺术一直是具有相当的代表性。由于传承年代久远，技术不断更新，历经朝代更迭，不同民族性与生活方式影响了中国陶瓷的发展方向。\n\n材料分析：红陶、普白瓷泥、黄陶等不同陶土材料的特性研究。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/Cu6F7UkYWb', caption: '材料分析 · 红陶 / 普白瓷泥 / 黄陶' },
+          { src: resolveAppUrl('/assets/yitao-material.png'), caption: '材料分析 · 红陶 / 普白瓷泥 / 黄陶' },
         ],
       },
       {
@@ -44,10 +45,10 @@ const PHASES: Phase[] = [
         content:
           '《一起做陶艺》游戏调研：真实的捏陶瓷小游戏。局限：只能在平板、手机里下载。创新：利用投屏加上手势互动更具趣味性，手势互动更能还原出现实做陶艺。\n\n互动装置调研：参考各类交互装置艺术案例。\n手部扫描技术调研：通过机器扫描手部，实现手势识别与追踪。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/mENfQNVfem', caption: '调研分析 · 《一起做陶艺》游戏' },
-          { src: 'https://aka.doubaocdn.com/s/3z2z2mksqB', caption: '游戏展示 · 陶艺作品展示' },
-          { src: 'https://aka.doubaocdn.com/s/2SkKtGUPQY', caption: '互动装置参考 · 裸眼 3D 大屏' },
-          { src: 'https://aka.doubaocdn.com/s/OTtm8DmZEU', caption: '手部扫描技术调研' },
+          { src: resolveAppUrl('/assets/yitao-research-game.jpeg'), caption: '调研分析 · 《一起做陶艺》游戏' },
+          { src: resolveAppUrl('/assets/yitao-game-show.jpeg'), caption: '游戏展示 · 陶艺作品展示' },
+          { src: resolveAppUrl('/assets/yitao-interactive-ref.jpeg'), caption: '互动装置参考 · 裸眼 3D 大屏' },
+          { src: resolveAppUrl('/assets/yitao-hand-scan.jpeg'), caption: '手部扫描技术调研' },
         ],
       },
     ],
@@ -66,7 +67,7 @@ const PHASES: Phase[] = [
         content:
           '将传统陶艺与手势互动相结合。不仅体现了超现实艺术的融合，更在交互设计和互动体验中展现出无限可能，为非遗文化的传承与发展提供了新路径。艺术家们开始尝试将电子技术与传统陶艺相结合。作品既保留了陶艺的原始美感，又融入了现代科技元素。打破了现实与虚拟的界限，让观众在欣赏作品的同时，感受到一种超越现实的艺术体验。\n\n关键词：手部操控、互动、传统陶艺',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/hMrY2kzeHJ', caption: '《不脏手的陶艺》作品主视觉' },
+          { src: resolveAppUrl('/assets/yitao-keyvisual.png'), caption: '《不脏手的陶艺》作品主视觉' },
         ],
       },
       {
@@ -74,9 +75,9 @@ const PHASES: Phase[] = [
         content:
           '步骤 1：初始界面 —— 参观者可选择一个喜欢的材质，进行制作\n步骤 2：进入素胚状态进行塑造\n步骤 3：塑造完成\n步骤 4：最终成品可以展示、进行扫码保存',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/6L77DyXhrV', caption: '初始界面 · 选择材质' },
-          { src: 'https://aka.doubaocdn.com/s/J8V0fFGwRi', caption: '素胚塑造 · 手势控制塑形' },
-          { src: 'https://aka.doubaocdn.com/s/eb9B6gfUUO', caption: '最终成品展示' },
+          { src: resolveAppUrl('/assets/yitao-ui-material.png'), caption: '初始界面 · 选择材质' },
+          { src: resolveAppUrl('/assets/yitao-shaping.png'), caption: '素胚塑造 · 手势控制塑形' },
+          { src: resolveAppUrl('/assets/yitao-final.png'), caption: '最终成品展示' },
         ],
       },
     ],
@@ -89,7 +90,7 @@ const PHASES: Phase[] = [
         content:
           '研究 3D 多边形节点模型的构建方式，为虚拟陶土的形变提供技术基础。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/jGlHtQyfEh', caption: '3D 多边形节点模型' },
+          { src: resolveAppUrl('/assets/yitao-polygon-model.png'), caption: '3D 多边形节点模型' },
         ],
       },
       {
@@ -97,7 +98,7 @@ const PHASES: Phase[] = [
         content:
           '研究基于物理的渲染材质（PBRMaterial），包括金属材质、浮雕材质等不同质感的实现。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/TaOyTAMifx', caption: 'PBRMaterial 材质 · 金属效果' },
+          { src: resolveAppUrl('/assets/yitao-pbr-metal.png'), caption: 'PBRMaterial 材质 · 金属效果' },
         ],
       },
       {
@@ -105,7 +106,7 @@ const PHASES: Phase[] = [
         content:
           '研究泛光（Bloom）等后期特效，提升作品的视觉表现力。同时探索玻璃、漆皮、气泡等特殊材质，丰富陶艺作品的视觉多样性。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/YkmwVbjLc3', caption: '有趣的材质 · 玻璃 / 漆皮 / 气泡' },
+          { src: resolveAppUrl('/assets/yitao-fun-material.png'), caption: '有趣的材质 · 玻璃 / 漆皮 / 气泡' },
         ],
       },
       {
@@ -113,7 +114,7 @@ const PHASES: Phase[] = [
         content:
           '选取几个数字跟踪点为一组控制一圈模型环形点，实现通过手势控制点来驱动 3D 模型形变。例如：2、3、4、5、6、7、8 点为一组，13、14、15、16、17、18、19、20 点为另一组。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/f3W8ayI1fB', caption: '数字跟踪点控制模型示意' },
+          { src: resolveAppUrl('/assets/yitao-tracking.png'), caption: '数字跟踪点控制模型示意' },
         ],
       },
       {
@@ -121,7 +122,7 @@ const PHASES: Phase[] = [
         content:
           '展示平台的木质台面，还有一些分面很规整的瓷罐模型可当做背景。这些可以修改材质，可以放到 4v 里面塑形。实现了基础的手势交互与陶艺塑形功能。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/p2KrKNDrWB', caption: '初步实践成果 · 陶土模型展示' },
+          { src: resolveAppUrl('/assets/yitao-practice.png'), caption: '初步实践成果 · 陶土模型展示' },
         ],
       },
     ],
@@ -138,7 +139,7 @@ const PHASES: Phase[] = [
         subtitle: '安装布置图',
         content: '草图展示：规划作品的空间布局与交互动线。',
         images: [
-          { src: 'https://aka.doubaocdn.com/s/7hvqKg6vfV', caption: '安装布置草图' },
+          { src: resolveAppUrl('/assets/yitao-layout-sketch.jpeg'), caption: '安装布置草图' },
         ],
       },
     ],

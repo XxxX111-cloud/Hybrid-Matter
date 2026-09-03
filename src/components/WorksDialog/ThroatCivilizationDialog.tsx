@@ -17,8 +17,8 @@ const GALLERY = [
   { image: resolveAppUrl('/throat-photos/08_build_process.jpg'), caption: '团队搭建调试现场' },
 ];
 
-const VIDEO_URL = 'https://aka.doubaocdn.com/s/Yilds6r7lr';
-const COVER_URL = 'https://aka.doubaocdn.com/s/FUZWRGVhde';
+const VIDEO_URL = resolveAppUrl('/assets/Yilds6r7lr.mp4');
+const COVER_URL = resolveAppUrl('/assets/FUZWRGVhde.jpg');
 
 const SECTIONS = [
   {

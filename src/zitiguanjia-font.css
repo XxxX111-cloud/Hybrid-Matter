@@ -1,7 +1,7 @@
 /* 字体管家细圆体 - 用于中文正文 */
 @font-face {
   font-family: 'ZiTiGuanJiaXiYuanTi';
-  src: url('https://aka.doubaocdn.com/s/zwKZ2T2dM7') format('truetype');
+  src: url('./assets/fonts/ZiTiGuanJiaXiYuanTi-2.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

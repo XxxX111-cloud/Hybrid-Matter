@@ -1,33 +1,34 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useWorksDialog } from './WorksDialogContext';
 import Image from '@/components/ui/image';
 
-const VIDEO_URL = 'https://aka.doubaocdn.com/s/Q8SccXlcpH';
+const VIDEO_URL = resolveAppUrl('/assets/Q8SccXlcpH.mp4');
 
 // ================== 图片分配（28张全部使用，无重复） ==================
 // 设计图/场景类（2张）
-const IMG_EXHIBITION = 'https://aka.doubaocdn.com/s/SmfS22Fayl';       // 1. 展览现场正面
-const IMG_KIVICUBE = 'https://aka.doubaocdn.com/s/UBQH2UOSl9';           // 2. Kivicube设计图（技术调研区用）
-const IMG_CARD_SIZE = 'https://aka.doubaocdn.com/s/AcQUpYhPMv';          // 3. 卡牌尺寸设计图
+const IMG_EXHIBITION = resolveAppUrl('/assets/SmfS22Fayl.png');       // 1. 展览现场正面
+const IMG_KIVICUBE = resolveAppUrl('/assets/UBQH2UOSl9.png');           // 2. Kivicube设计图（技术调研区用）
+const IMG_CARD_SIZE = resolveAppUrl('/assets/AcQUpYhPMv.png');          // 3. 卡牌尺寸设计图
 
 // 调研配图（3张）
-const IMG_POKEMON_CARDS = 'https://aka.doubaocdn.com/s/430A49yOMv';      // 宝可梦卡牌实物参考
-const IMG_YUGIOH_CARDS = 'https://aka.doubaocdn.com/s/WWZHA3Q4Du';       // 游戏王卡牌实物参考
-const IMG_KIVICUBE_LOGO = 'https://aka.doubaocdn.com/s/pup8Wwe6hQ';      // Kivicube logo
+const IMG_POKEMON_CARDS = resolveAppUrl('/assets/430A49yOMv.png');      // 宝可梦卡牌实物参考
+const IMG_YUGIOH_CARDS = resolveAppUrl('/assets/WWZHA3Q4Du.png');       // 游戏王卡牌实物参考
+const IMG_KIVICUBE_LOGO = resolveAppUrl('/assets/pup8Wwe6hQ.png');      // Kivicube logo
 
 // 技术实现截图（3张）
-const IMG_UNITY_SCENE = 'https://aka.doubaocdn.com/s/iUWFgqo6vi';        // Unity AR场景搭建
-const IMG_BLENDER_OBS_1 = 'https://aka.doubaocdn.com/s/UUkrLxiFFP';      // Blender建模+OBS录屏 1
-const IMG_BLENDER_OBS_2 = 'https://aka.doubaocdn.com/s/ZFLVs7Ihfi';      // Blender建模+OBS录屏 2
+const IMG_UNITY_SCENE = resolveAppUrl('/assets/iUWFgqo6vi.png');        // Unity AR场景搭建
+const IMG_BLENDER_OBS_1 = resolveAppUrl('/assets/UUkrLxiFFP.jpg');      // Blender建模+OBS录屏 1
+const IMG_BLENDER_OBS_2 = resolveAppUrl('/assets/ZFLVs7Ihfi.jpg');      // Blender建模+OBS录屏 2
 
 // 成果展示配图（6张）
-const IMG_EXHIBITION_SIDE = 'https://aka.doubaocdn.com/s/I9mDJHjxA5';      // 展览现场侧面
-const IMG_POSTER = 'https://aka.doubaocdn.com/s/IjtWDYSJVB';               // 宣传海报主视觉
-const IMG_WALLET = 'https://aka.doubaocdn.com/s/tMBvWhAKbN';               // 卡牌收纳钱包
-const IMG_DELUXE_BOX = 'https://aka.doubaocdn.com/s/M1cwVheMud';           // 豪华礼盒套装
-const IMG_BLIND_BOX = 'https://aka.doubaocdn.com/s/TpUSegOLxh';            // 盲盒包装盒
+const IMG_EXHIBITION_SIDE = resolveAppUrl('/assets/I9mDJHjxA5.jpg');      // 展览现场侧面
+const IMG_POSTER = resolveAppUrl('/assets/IjtWDYSJVB.jpg');               // 宣传海报主视觉
+const IMG_WALLET = resolveAppUrl('/assets/tMBvWhAKbN.jpg');               // 卡牌收纳钱包
+const IMG_DELUXE_BOX = resolveAppUrl('/assets/M1cwVheMud.png');           // 豪华礼盒套装
+const IMG_BLIND_BOX = resolveAppUrl('/assets/TpUSegOLxh.png');            // 盲盒包装盒
 
 // 角色立绘（13张）—— 7张给最终IP + 6张给废稿
 const IP_CHARS = [
@@ -36,59 +37,59 @@ const IP_CHARS = [
     attr: '石 · 农耕属性',
     desc: '原型江南石犁，头部打磨光滑的石犁刃造型，身体敦实健壮，体表有岩石肌理，头顶点缀稻穗绒毛，勤恳又可靠，农耕文明化身',
     skill: '裂地耕涛',
-    src: 'https://aka.doubaocdn.com/s/82NhJcMXTs',
+    src: resolveAppUrl('/assets/82NhJcMXTs.png'),
   },
   {
     name: '骨针小刺',
     attr: '骨 · 敏捷属性',
     desc: '原型出土骨针+骨针广场地标，身形纤细，头顶一根细长骨针状尖角，身体是米白色骨质质感，手脚灵活，心灵手巧，擅长用灵力编织结界',
     skill: '织骨结界',
-    src: 'https://aka.doubaocdn.com/s/uKW48qVSOm',
+    src: resolveAppUrl('/assets/uKW48qVSOm.png'),
   },
   {
     name: '石凿小尖',
     attr: '岩 · 格斗属性',
     desc: '原型打磨石器石凿石斧，头部是石凿刃口造型，身体小巧精干，四肢灵活，体表是天然岩石纹理，精准打击，行动力敏捷',
     skill: '凿破千钧',
-    src: 'https://aka.doubaocdn.com/s/jdbMkTUaPo',
+    src: resolveAppUrl('/assets/jdbMkTUaPo.png'),
   },
   {
     name: '锋矢猎手',
     attr: '岩 · 格斗属性',
     desc: '原型广富林石镞（石箭镞），头部尖锐的三棱形箭头造型，红色锐利的眼睛，粗壮有力的肢体，全身遍布石刺棱角，"龙山文化"阵营的狩猎守护灵',
     skill: '穿古破阵',
-    src: 'https://aka.doubaocdn.com/s/hQ7kVJke3u',
+    src: resolveAppUrl('/assets/hQ7kVJke3u.png'),
   },
   {
     name: '鼎纹力士',
     attr: '骨 · 格斗属性',
     desc: '原型广富林文化夹砂陶鼎，身躯由夹砂陶土煅烧而成，每一道纹饰都复刻陶器上的绳纹与几何印纹，厚重身躯能抵御风雨，"融合与力量"的代表',
     skill: '炊火护御',
-    src: 'https://aka.doubaocdn.com/s/QoZuQBfh5B',
+    src: resolveAppUrl('/assets/QoZuQBfh5B.png'),
   },
   {
     name: '鬶足行者',
     attr: '陶 · 岩属性',
     desc: '原型袋足陶鬶，头顶尖翘造型复刻陶鬶标志性的流口，身体上的浅纹是陶器上绳纹的简化，龙山文化南迁的见证者',
     skill: '薪火流温',
-    src: 'https://aka.doubaocdn.com/s/po8ZZXZCWp',
+    src: resolveAppUrl('/assets/po8ZZXZCWp.png'),
   },
   {
     name: '环玉游者',
     attr: '玉 · 飞行属性',
     desc: '原型良渚文化玉璧/玉环，身体由温润的白玉凝炼而成，背后的环状玉饰复刻良渚玉璧形制，承载先民"沟通天地、祈求安宁"的信仰',
     skill: '天环祈福',
-    src: 'https://aka.doubaocdn.com/s/6PrJLv9tF6',
+    src: resolveAppUrl('/assets/6PrJLv9tF6.png'),
   },
 ];
 
 const DRAFT_CHARS = [
-  { name: '神面玉影', attr: '玉 + 灵', desc: '原型良渚神人兽面纹，轮廓圆润卡通化，周身环绕多层玉环', src: 'https://aka.doubaocdn.com/s/Y3OJjIAudt' },
-  { name: '夹砂鼎仔', attr: '陶 + 岩', desc: '原型夹砂陶鼎，三足短胖鼎形精灵，鼎耳变成两只小尖角', src: 'https://aka.doubaocdn.com/s/85oolzyicD' },
-  { name: '牌坊镇灵', attr: '岩 + 灵', desc: '原型集贤园古建石牌坊，方正的石质灵体，头顶复刻牌坊檐角', src: 'https://aka.doubaocdn.com/s/uCR0ln4wT6' },
-  { name: '芦絮飘飘', attr: '风 + 草', desc: '原型湖边芦苇，蓬松的芦絮团身体，底下伸出细短根茎小脚', src: 'https://aka.doubaocdn.com/s/i6IUiZaVpk' },
-  { name: '古土芽芽', attr: '土 + 草', desc: '原型遗址土层原生草木，圆滚滚的土团子，头顶长出嫩绿新芽', src: 'https://aka.doubaocdn.com/s/Xj6gKnM28I' },
-  { name: '渡陶水影', attr: '水 属性', desc: '原型印纹陶罐+富林湖，陶罐身形，下半部分融合流水形态', src: 'https://aka.doubaocdn.com/s/UsUuZvdzeG' },
+  { name: '神面玉影', attr: '玉 + 灵', desc: '原型良渚神人兽面纹，轮廓圆润卡通化，周身环绕多层玉环', src: resolveAppUrl('/assets/Y3OJjIAudt.png') },
+  { name: '夹砂鼎仔', attr: '陶 + 岩', desc: '原型夹砂陶鼎，三足短胖鼎形精灵，鼎耳变成两只小尖角', src: resolveAppUrl('/assets/85oolzyicD.png') },
+  { name: '牌坊镇灵', attr: '岩 + 灵', desc: '原型集贤园古建石牌坊，方正的石质灵体，头顶复刻牌坊檐角', src: resolveAppUrl('/assets/uCR0ln4wT6.png') },
+  { name: '芦絮飘飘', attr: '风 + 草', desc: '原型湖边芦苇，蓬松的芦絮团身体，底下伸出细短根茎小脚', src: resolveAppUrl('/assets/i6IUiZaVpk.png') },
+  { name: '古土芽芽', attr: '土 + 草', desc: '原型遗址土层原生草木，圆滚滚的土团子，头顶长出嫩绿新芽', src: resolveAppUrl('/assets/Xj6gKnM28I.png') },
+  { name: '渡陶水影', attr: '水 属性', desc: '原型印纹陶罐+富林湖，陶罐身形，下半部分融合流水形态', src: resolveAppUrl('/assets/UsUuZvdzeG.png') },
 ];
 
 // ================== 辅助组件 ==================

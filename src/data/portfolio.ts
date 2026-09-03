@@ -1,3 +1,4 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 // EXPORTS: IWork, IAward, ISkill, ISkillCategory, MOCK_WORKS, MOCK_AWARDS, MOCK_SKILLS
 
 export interface IWork {
@@ -34,7 +35,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Interactive Installation / 交互装置',
     description:
       '以手势为媒，捏塑无形之念。将传统陶艺的"意"转化为数字交互的"形"，探讨数字时代手作精神的延续。',
-    imageUrl: 'https://aka.doubaocdn.com/s/R20SI3H2tR',
+    imageUrl: resolveAppUrl('/assets/yitao-poster.png'),
   },
   {
     id: 'throat-civilization',
@@ -42,7 +43,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Interactive Installation',
     description:
       '综合类新实验装置作品，负责装置整体搭建以及 Arduino 交互系统模块设计与实现，探索语言、身体与技术的边界。',
-    imageUrl: 'https://aka.doubaocdn.com/s/FUZWRGVhde',
+    imageUrl: resolveAppUrl('/assets/FUZWRGVhde.jpg'),
   },
   {
     id: 'prepped-food-spring',
@@ -50,7 +51,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Projection Mapping',
     description:
       '2025 重庆国际光影艺术节 Mapping 大赛决赛入围作品，以食物为载体的光影叙事实验。',
-    imageUrl: 'https://aka.doubaocdn.com/s/ywy8QrfF6t',
+    imageUrl: resolveAppUrl('/assets/ywy8QrfF6t.png'),
   },
   {
     id: 'photography-series',
@@ -58,7 +59,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Photography / 摄影',
     description:
       '城市影像与光影叙事系列，收录建筑、街景、自然与人物摄影作品。',
-    imageUrl: 'https://aka.doubaocdn.com/s/7FEPFkV94y',
+    imageUrl: resolveAppUrl('/assets/7FEPFkV94y.jpg'),
   },
   {
     id: 'dt-business-video',
@@ -67,7 +68,7 @@ export const MOCK_WORKS: IWork[] = [
     description:
       '商业观察视频号剪辑与运营，负责从选题、脚本、拍摄到后期合成的完整视频生产流程。',
     imageUrl:
-      'https://aka.doubaocdn.com/s/vpDG8P0km7',
+      resolveAppUrl('/assets/vpDG8P0km7.png'),
   },
   {
     id: 'gfl-ar-dimension',
@@ -75,7 +76,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Interactive Installation / 交互装置',
     description:
       '广富林文明主题多卡牌组合 AR 交互设计，三分式实体卡牌联动 Unity VUFORIA 实现多目标同步识别与文明动画拼装。',
-    imageUrl: 'https://aka.doubaocdn.com/s/FZXrYV460z',
+    imageUrl: resolveAppUrl('/assets/FZXrYV460z.png'),
   },
 ];
 

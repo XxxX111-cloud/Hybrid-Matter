@@ -1,7 +1,8 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useEffect, useState } from 'react';
 import { Image } from '@/components/ui/image';
 
-const LOGO_URL = 'https://aka.doubaocdn.com/s/bMz0OGdLxZ';
+const LOGO_URL = resolveAppUrl('/assets/bMz0OGdLxZ.png');
 
 interface PreloaderProps {
   /** 退出动画开始时回调（用于同步触发主页面入场） */

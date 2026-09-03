@@ -62,3 +62,13 @@ pnpm-lock.yaml
 
 # Agent files
 .agent/
+
+# Localization temp scripts and backups
+src-backup-before-localize/
+cdn-mapping.json
+download-assets.ps1
+retry-download.ps1
+localize-urls.ps1
+fix-yitao.ps1
+list-yitao-slides.ps1
+check-localize.ps1

@@ -1,3 +1,4 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -15,49 +16,49 @@ const VIDEO_GALLERY: VideoItem[] = [
   {
     title: '便利店，为什么要抢瑞幸的客人',
     description: 'DT商业观察 第1集',
-    videoUrl: 'https://aka.doubaocdn.com/s/U3dxRA2WBx',
+    videoUrl: resolveAppUrl('/assets/U3dxRA2WBx.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '车越来越重，谁在付出代价',
     description: 'DT商业观察 第2集',
-    videoUrl: 'https://aka.doubaocdn.com/s/pnL0yetVVw',
+    videoUrl: resolveAppUrl('/assets/pnL0yetVVw.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '满街"小蓝灯"，为什么被叫停？',
     description: 'DT商业观察 第3集',
-    videoUrl: 'https://aka.doubaocdn.com/s/gAjKUVjiex',
+    videoUrl: resolveAppUrl('/assets/gAjKUVjiex.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '奶茶店，开始抢酒吧的生意了',
     description: 'DT商业观察 第4集',
-    videoUrl: 'https://aka.doubaocdn.com/s/ToNR48eq1S',
+    videoUrl: resolveAppUrl('/assets/ToNR48eq1S.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '为什么牛肉涨价了？',
     description: 'DT商业观察 第5集',
-    videoUrl: 'https://aka.doubaocdn.com/s/uJz3jMG4Cu',
+    videoUrl: resolveAppUrl('/assets/uJz3jMG4Cu.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '一朵茉莉花，怎么成了新茶饮顶流',
     description: 'DT商业观察 第6集',
-    videoUrl: 'https://aka.doubaocdn.com/s/Gp1anOMjv2',
+    videoUrl: resolveAppUrl('/assets/Gp1anOMjv2.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },
   {
     title: '字节押注的牙膏冲到行业第三',
     description: 'DT商业观察 第7集',
-    videoUrl: 'https://aka.doubaocdn.com/s/FTN4r0DcVI',
+    videoUrl: resolveAppUrl('/assets/FTN4r0DcVI.mp4'),
     thumbnailUrl: '',
     duration: '--:--',
   },

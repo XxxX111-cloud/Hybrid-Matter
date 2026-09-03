@@ -1,3 +1,4 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -5,9 +6,9 @@ import SimpleCarousel from '@/components/SimpleCarousel/SimpleCarousel';
 import { useWorksDialog } from './WorksDialogContext';
 
 const SLIDES = [
-  { image: 'https://aka.doubaocdn.com/s/ezB4Vhaf8l', caption: '作品展示 1' },
-  { image: 'https://aka.doubaocdn.com/s/bwSHvIVTXA', caption: '作品展示 2' },
-  { image: 'https://aka.doubaocdn.com/s/aAEl2adszA', caption: '作品展示 3' },
+  { image: resolveAppUrl('/assets/ezB4Vhaf8l.jpg'), caption: '作品展示 1' },
+  { image: resolveAppUrl('/assets/bwSHvIVTXA.jpg'), caption: '作品展示 2' },
+  { image: resolveAppUrl('/assets/aAEl2adszA.png'), caption: '作品展示 3' },
 ];
 
 export default function PreppedFoodDialog() {
@@ -95,7 +96,7 @@ export default function PreppedFoodDialog() {
                 >
                   <video
                     ref={videoRef}
-                    src="https://aka.doubaocdn.com/s/MYXGUeP3N9"
+                    src={resolveAppUrl('/assets/MYXGUeP3N9.mp4')}
                     controls
                     playsInline
                     loop

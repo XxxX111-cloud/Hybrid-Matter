@@ -1,3 +1,4 @@
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 import { useEffect, useRef } from 'react';
 import { FullpageProvider } from '@/components/Fullpage/FullpageProvider';
 import FullpageDots from '@/components/Fullpage/FullpageDots';
@@ -64,7 +65,7 @@ export default function HomePage() {
               {/* 导航浮层（pointer-events-none 由父容器统一设置，子组件需自行开启） */}
               <div className="pointer-events-auto">
                 <BubbleMenu
-                  logo="https://aka.doubaocdn.com/s/bMz0OGdLxZ"
+                  logo={resolveAppUrl('/assets/bMz0OGdLxZ.png')}
                   useFixedPosition={true}
                   menuBg="#ffffff"
                   menuContentColor="#111111"

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { resolveAppUrl } from '@lark-apaas/client-toolkit-lite';
 
-const VIDEO_URL = 'https://aka.doubaocdn.com/s/Vx7BYHBQwJ';
+const VIDEO_URL = resolveAppUrl('/assets/transition-personal.mp4');
 
 const ScrollRevealTransition = () => {
   const sectionRef = useRef(null);
