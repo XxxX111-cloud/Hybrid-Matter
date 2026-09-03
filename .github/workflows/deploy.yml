@@ -31,8 +31,11 @@ jobs:
         run: npm ci
 
       - name: Build
-        # 使用 --base './' 相对路径，确保 GitHub Pages 任意子路径下资源都能正常加载
-        # 构建产物输出到 dist/gh-pages
+        # --base './'：打包出的 JS/CSS 走相对路径，适配 GitHub Pages 子目录
+        # CLIENT_BASE_PATH：让运行时 resolveAppUrl() 拼出的绝对 URL 与 BrowserRouter
+        # 的 basename 正确带上仓库子路径 /Hybrid-Matter，否则图片/视频会 404
+        env:
+          CLIENT_BASE_PATH: /Hybrid-Matter
         run: npx vite build --base './' --outDir dist/gh-pages
 
       - name: Sanitize HTML for standalone hosting
