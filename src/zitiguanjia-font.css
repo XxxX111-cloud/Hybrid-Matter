@@ -1,7 +1,7 @@
 /* 字体管家细圆体 - 用于中文正文 */
 @font-face {
   font-family: 'ZiTiGuanJiaXiYuanTi';
-  src: url('./assets/fonts/ZiTiGuanJiaXiYuanTi-2.ttf') format('truetype');
+  src: url('./assets/fonts/ZiTiGuanJiaXiYuanTi-2.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -21,7 +21,11 @@ body {
   font-family: var(--font-sans);
 }
 
-/* —— 隐藏平台右下角「豆包 AI 生成」水印标识 —— */
+/* —— 隐藏平台右下角「豆包 AI 生成」水印标识 ——
+   水印是 client-toolkit-lite 渲染的 <doubao-watermark> 自定义元素
+   （内联样式 + Shadow DOM），必须用标签选择器直接隐藏宿主节点。 */
+doubao-watermark,
+doubao-watermark * ,
 [class*="watermark"],
 [class*="powered-by"],
 [class*="branding"],
@@ -29,10 +33,13 @@ body {
 [class*="miaoda-badge"],
 [class*="ai-generated"],
 [class*="brand-badge"],
+[data-custom-element*="watermark"],
 [aria-label*="豆包"],
 [aria-label*="AI生成"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

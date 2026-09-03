@@ -217,7 +217,7 @@ const ScrollRevealTransition = () => {
           src={VIDEO_URL}
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
         />
 

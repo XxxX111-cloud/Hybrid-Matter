@@ -6,7 +6,6 @@ import HomePage from "@/pages/HomePage/HomePage";
 import PhotographyPage from "@/pages/PhotographyPage/PhotographyPage";
 import Preloader from "@/components/Preloader";
 import GrainOverlay from "@/components/GrainOverlay";
-import './zitiguanjia-font.css';
 
 /**
  * 页面入场动画状态 Context

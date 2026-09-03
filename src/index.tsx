@@ -5,6 +5,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AppContainer, ErrorRender } from "@lark-apaas/client-toolkit-lite";
 import App from "./app";
 import "./index.css";
+// 中文字体样式必须在 index.css 之后导入，才能覆盖其 html/body 字体栈
+import "./zitiguanjia-font.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
