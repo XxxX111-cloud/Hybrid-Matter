@@ -3,7 +3,7 @@ import StaggerItem from '@/components/Fullpage/StaggerItem';
 import ScrollVelocity from '@/components/ScrollVelocity/ScrollVelocity';
 import Image from '@/components/ui/image';
 
-const PORTRAIT_URL = 'https://aka.doubaocdn.com/s/1qldIIwSsa';
+const PORTRAIT_URL = resolveAppUrl('/assets/portrait.jpg');
 
 export default function AboutSection() {
   return (
