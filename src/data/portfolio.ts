@@ -35,7 +35,7 @@ export const MOCK_WORKS: IWork[] = [
     category: 'Interactive Installation / 交互装置',
     description:
       '以手势为媒，捏塑无形之念。将传统陶艺的"意"转化为数字交互的"形"，探讨数字时代手作精神的延续。',
-    imageUrl: resolveAppUrl('/assets/yitao-poster.png'),
+    imageUrl: resolveAppUrl('/assets/yitao-cover.png'),
   },
   {
     id: 'throat-civilization',

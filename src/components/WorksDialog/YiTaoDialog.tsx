@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { useWorksDialog } from './WorksDialogContext';
 import { Image } from '@/components/ui/image';
 
-const VIDEO_URL = resolveAppUrl('/assets/yitao-demo.mp4');
+const VIDEO_URL = resolveAppUrl('/assets/yitao-work-video.mp4');
 const POSTER_URL = resolveAppUrl('/assets/yitao-poster.png');
 
 interface PhaseImage {
