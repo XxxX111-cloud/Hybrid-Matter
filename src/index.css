@@ -4,6 +4,13 @@
 @import "./tailwind-theme.css";
 @import "./typography.css";
 
+/* ========== 独立部署：隐藏平台运行时注入的「妙搭生成」水印 ==========
+   水印是 toolkit 注册的自定义元素 <miaoda-watermark>，用 Shadow DOM 渲染，
+   position:fixed、z-index 最高。脱离平台独立部署时全局隐藏。 */
+miaoda-watermark {
+  display: none !important;
+}
+
 :root {
   --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
@@ -93,7 +100,7 @@ body {
 
 .dark-scroll ::-webkit-scrollbar-thumb:hover,
 .bg-black ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 0.4);
 }
 
 /* ========== 标题微妙描边效果 ========== */
@@ -160,7 +167,7 @@ body {
 .preloader-progress-bar {
   width: 200px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 0.15);
   overflow: hidden;
   border-radius: 9999px;
   margin-top: 48px;
