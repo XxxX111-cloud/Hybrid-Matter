@@ -26,7 +26,7 @@ import path from 'path';
 const DIST_DIR = process.argv[2] || 'dist/gh-pages';
 const APP_NAME = 'Hybrid Matter';
 const APP_DESCRIPTION = 'Xiang Chenghao Digital Media Art Portfolio';
-const FAVICON_PATH = './favicon.svg';
+const FAVICON_PATH = './favicon-32.png';
 
 const PLATFORM_HOST_PATTERNS = [
   'ibytedapm.com',
@@ -90,7 +90,7 @@ const STANDALONE_POLYFILL = `
             data: {
               app_info: {
                 app_name: 'Hybrid Matter',
-                app_avatar: './favicon.svg',
+                app_avatar: FAVICON_PATH,
                 app_description: 'Xiang Chenghao Digital Media Art Portfolio'
               },
               app_runtime_extra: {
