@@ -4,6 +4,7 @@
  * 依赖：sharp（由 build:cf 脚本在构建时临时安装，无需写入 package.json）。
  */
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
@@ -13,6 +14,8 @@ const SRC = path.join(ROOT, 'src/assets/logo-xh.png');
 const OUT_DIR = path.join(ROOT, 'public/icons');
 
 async function generate(size, frac, name, outDir = OUT_DIR) {
+  // 确保输出目录存在（git 不跟踪空目录，sharp 也不会自动建目录）
+  fs.mkdirSync(outDir, { recursive: true });
   // 裁掉黑色背景边框
   const trimmed = await sharp(SRC).trim({ threshold: 10 }).toBuffer();
   const meta = await sharp(trimmed).metadata();
