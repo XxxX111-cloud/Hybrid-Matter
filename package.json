@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build": "bash scripts/build.sh",
+    "build:cf": "npm install sharp@0.34.5 --no-save --no-audit --no-fund && node scripts/generate-pwa-icons.mjs && vite build --base './' --outDir dist/cf-pages && node public/sanitize-standalone.js dist/cf-pages",
     "typecheck": "tsc -p tsconfig.app.json",
     "lint": "concurrently npm:typecheck npm:lint:eslint",
     "lint:eslint": "eslint src",
@@ -25,7 +26,7 @@
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-context-menu": "^2.2.14",
     "@radix-ui/react-dialog": "^1.1.14",
-    "@radix-ui/react-dropdown-menu": "^2.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.2.14",
     "@radix-ui/react-hover-card": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-menubar": "^1.1.14",
