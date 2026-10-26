@@ -19,7 +19,7 @@ export default function HeroSection() {
   const goTo = fullpageCtx?.forceGoTo ?? fullpageCtx?.goTo ?? (() => {});
 
   const { displayed, done } = useTypewriter({
-    text: '数字媒体艺术・交互 / 装置 / 三维视觉创作者\n大三｜上海视觉艺术学院\n以代码、三维空间、交互逻辑作为创作语言，搭建体验的规则，让观众成为作品的一部分。\n\nDigital Media Art Creator | Interaction · Installation · 3D Visual\nJunior Student, Shanghai Institute of Visual Arts\nUsing code, 3D space and interactive logic as creative languages. Build the rules of experience, and let audiences become part of the work.',
+    text: '数字媒体艺术・交互 / 装置 / 三维视觉创作者\n大四｜上海视觉艺术学院\n以代码、三维空间、交互逻辑作为创作语言，搭建体验的规则，让观众成为作品的一部分。\n\nDigital Media Art Creator | Interaction · Installation · 3D Visual\nSenior Student, Shanghai Institute of Visual Arts\nUsing code, 3D space and interactive logic as creative languages. Build the rules of experience, and let audiences become part of the work.',
     speed: 38,
     startDelay: 600,
   });

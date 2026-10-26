@@ -245,7 +245,7 @@ export default function AboutSection() {
             <div className="space-y-5 flex-1 min-w-0 max-w-4xl">
               <StaggerItem delay={0.5} offsetMultiplier={0.7}>
                 <p className="text-black text-base md:text-lg leading-relaxed font-normal">
-                  我是项诚皓，就读于上海视觉艺术学院数字媒体艺术专业大三。
+                  我是项诚皓，就读于上海视觉艺术学院数字媒体艺术专业大四。
                 </p>
               </StaggerItem>
               <StaggerItem delay={0.58} offsetMultiplier={0.7}>
