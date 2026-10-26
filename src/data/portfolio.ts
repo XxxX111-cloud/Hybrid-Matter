@@ -82,6 +82,24 @@ export const MOCK_WORKS: IWork[] = [
 
 export const MOCK_AWARDS: IAward[] = [
   {
+    id: 'shining-shanghai-2026',
+    title: '“闪亮·上海”（静安）2026 国际光影艺术大赛 · 银奖',
+    detail: '在“闪亮·上海”（静安）2026 国际光影艺术大赛中荣获银奖',
+    year: '2026',
+  },
+  {
+    id: 'jingan-sculpture-2026',
+    title: '“空间涌现”第九届中国·上海静安国际雕塑展 · 参展',
+    detail: '作品《无界之境》参展“空间涌现”第九届中国·上海静安国际雕塑展',
+    year: '2026',
+  },
+  {
+    id: 'scholarship-2026',
+    title: '校级二等综合奖学金',
+    detail: '2026 年获校级二等综合奖学金',
+    year: '2026',
+  },
+  {
     id: 'scholarship',
     title: '校级三等综合奖学金',
     detail: '连续两年获得校内三等综合奖学金',
