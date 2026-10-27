@@ -111,6 +111,7 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
   const wheelTimerRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const touchScrollableRef = useRef<HTMLElement | null>(null);
   const isMobile = useIsMobile();
 
   const isLocked = useCallback(() => {
@@ -300,35 +301,79 @@ export function FullpageProvider({ total, children, background, chrome, onIndexC
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goNext, goPrev, goTo, total, isLocked]);
 
-  // 触摸翻页
+  // 触摸翻页（手机端）：与滚轮逻辑一致，先判断触摸起点是否在可垂直滚动的内容区
   useEffect(() => {
     if (!isMobile) return;
     const el = containerRef.current;
     if (!el) return;
 
+    // 从触摸起点向上找可垂直滚动的容器（例如 About 页的 overflow-y-auto 内容区）
+    const findScrollable = (target: EventTarget | null): HTMLElement | null => {
+      if (!(target instanceof HTMLElement)) return null;
+      const chain: HTMLElement[] = [];
+      let node: HTMLElement | null = target;
+      while (node && node !== el) {
+        chain.push(node);
+        node = node.parentElement;
+      }
+      for (const item of chain) {
+        const overflowY = window.getComputedStyle(item).overflowY;
+        if ((overflowY === 'auto' || overflowY === 'scroll') && item.scrollHeight > item.clientHeight + 1) {
+          return item;
+        }
+      }
+      return null;
+    };
+
+    const resetTouch = () => {
+      touchStartYRef.current = null;
+      touchStartXRef.current = null;
+      touchScrollableRef.current = null;
+    };
+
     const handleTouchStart = (e: TouchEvent) => {
-      if (isLocked()) return;
+      if (isLocked()) {
+        touchScrollableRef.current = null;
+        return;
+      }
       touchStartYRef.current = e.touches[0].clientY;
       touchStartXRef.current = e.touches[0].clientX;
+      touchScrollableRef.current = findScrollable(e.target);
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
       if (isLocked()) return;
       if (touchStartYRef.current === null || touchStartXRef.current === null) return;
+
       const deltaY = touchStartYRef.current - e.changedTouches[0].clientY;
       const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
-      const threshold = 50;
+      const threshold = 60;
+      const isVertical = Math.abs(deltaY) > Math.abs(deltaX);
 
-      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold) {
-        if (deltaY > 0) goNext();
-        else goPrev();
-      } else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      if (isVertical) {
+        // 若起点在可滚动容器内，且该方向容器还未滚到边界，则交给内容滚动，不翻页
+        const scrollable = touchScrollableRef.current;
+        if (scrollable) {
+          const goingDown = deltaY > 0;
+          const atBottom =
+            scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
+          const atTop = scrollable.scrollTop <= 0;
+          if ((goingDown && !atBottom) || (!goingDown && !atTop)) {
+            resetTouch();
+            return;
+          }
+        }
+        if (Math.abs(deltaY) > threshold) {
+          if (deltaY > 0) goNext();
+          else goPrev();
+        }
+      } else if (Math.abs(deltaX) > threshold) {
+        // 水平滑动翻页
         if (deltaX > 0) goNext();
         else goPrev();
       }
 
-      touchStartYRef.current = null;
-      touchStartXRef.current = null;
+      resetTouch();
     };
 
     el.addEventListener('touchstart', handleTouchStart, { passive: true });
